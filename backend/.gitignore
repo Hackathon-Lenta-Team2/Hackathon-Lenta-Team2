@@ -155,4 +155,4 @@ cython_debug/
 
 migrations/
 static/
-data/
+/hackathon_projects/data/query_example.csv
