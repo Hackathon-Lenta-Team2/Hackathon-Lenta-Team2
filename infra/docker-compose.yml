@@ -4,7 +4,7 @@ services:
   db:
     container_name: db
     image: postgres:15-alpine
-    restart: always
+    restart: unless-stopped
     volumes:
       - db_data:/var/lib/postgresql/data/
     env_file:
@@ -14,11 +14,41 @@ services:
   back:
     container_name: back
     build: ../backend/
-    restart: always
+    restart: unless-stopped
     volumes:
       - static_volume:/app/hackathon_projects/static/
     depends_on:
       - db
+    env_file:
+      - ./.env
+
+  redis:
+    container_name: redis
+    image: redis:7.2.1-alpine
+    restart: unless-stopped
+
+  celery:
+    container_name: celery-worker
+    build: ../backend/
+    restart: unless-stopped
+    command: celery -A hackathon_projects worker -l INFO
+    depends_on:
+      - db
+      - redis
+    env_file:
+      - ./.env
+
+  flower:
+    build: ../backend/
+    restart: unless-stopped
+
+    container_name: flower_app
+    command: celery -A hackathon_projects flower
+    depends_on:
+      - redis
+      - celery
+    ports:
+      - "5555:5555"
     env_file:
       - ./.env
 

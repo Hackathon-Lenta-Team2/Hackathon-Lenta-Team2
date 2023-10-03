@@ -156,5 +156,5 @@ DJOSER = {
 DATA_FILES_DIR = BASE_DIR / "data"
 
 CELERY_BROKER_URL = os.getenv(
-    "CELERY_BROKER_URL", default="redis://redis:6379/0"
+    "CELERY_BROKER_URL", default="redis://localhost:6379/0"
 )
