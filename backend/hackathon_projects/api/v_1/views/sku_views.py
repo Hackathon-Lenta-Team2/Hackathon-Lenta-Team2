@@ -1,16 +1,9 @@
-from api.v_1.filters import (
-    CategoryFilter,
-    GroupFilter,
-    StockKeepingUnitFilter,
-    SubcategoryFilter,
-)
+from api.v_1.filters import (CategoryFilter, GroupFilter,
+                             StockKeepingUnitFilter, SubcategoryFilter)
 from api.v_1.mixins import ListObjectsMixin
 from api.v_1.serializers.products_serializers import (
-    CategorySerializer,
-    GroupSerializer,
-    StockKeepingUnitSerializer,
-    SubcategorySerializer,
-)
+    CategorySerializer, GroupSerializer, StockKeepingUnitSerializer,
+    SubcategorySerializer)
 from products.models import Category, Group, StockKeepingUnit, Subcategory
 
 

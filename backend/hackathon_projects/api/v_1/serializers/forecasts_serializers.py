@@ -1,4 +1,3 @@
-from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 
 from forecasts.models import Forecast, ForecastData
@@ -27,7 +26,3 @@ class ForecastSerializer(ModelSerializer):
         forecast_data_serializer = ForecastDataSerializer(
             forecast_data, many=True)
         return forecast_data_serializer.data
-
-
-class JSONFileSerializer(serializers.Serializer):
-    file_path = serializers.CharField(default='forecast_archive.json')
