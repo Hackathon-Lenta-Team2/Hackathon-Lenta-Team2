@@ -2,22 +2,17 @@ import json
 import os
 
 from django.contrib.auth import get_user_model
-from django.core.files.uploadedfile import SimpleUploadedFile
 from django.urls import reverse
 from rest_framework import status
-from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework.test import APIRequestFactory
 
-from api.v_1.serializers.forecasts_serializers import JSONFileSerializer
-from api.v_1.views.forecasts_views import ImportDataView
-from core.create_user import BaseUserTest
+from api.tests.test_utils import BaseUserTest
 from core.model_factories.sku_factory import (CategoryFactory, GroupFactory,
                                               StockKeepingUnitFactory,
                                               SubCategoryFactory)
 from core.model_factories.store_factory import CityFactory, StoreFactory
 from forecasts.models import Forecast, ForecastData
-from products.models import StockKeepingUnit
 
 User = get_user_model()
 
@@ -81,15 +76,19 @@ class ImportDataViewTestCase(BaseUserTest):
     def setUp(self) -> None:
         self.factory = APIRequestFactory()
         self.user_authorization()
-        self.user = User.objects.create_user(
-            username='testuser', password='testpassword')
-        self.token = Token.objects.create(user=self.user)
 
-    def test_import_data_success(self):
+    def prepare_json_file(self, data):
+        temp_json_file_dir = 'data'
+        temp_json_file_path = 'forecast_archive.json'
+        temp_file_path = os.path.join(temp_json_file_dir, temp_json_file_path)
+        with open(temp_file_path, 'w', encoding='utf-8') as temp_file:
+            json.dump(data, temp_file)
+        return temp_file_path
+
+    def test_import_uncorrected_data(self):
         data_for_json = {
             "data": [
                 {
-                    "store": self.store.id,
                     "forecast_date": "2023-09-01",
                     "forecast": {
                         "sku": self.sku.id,
@@ -100,57 +99,11 @@ class ImportDataViewTestCase(BaseUserTest):
                 },
             ]
         }
-        json_data = json.dumps(data_for_json)
-        json_file = SimpleUploadedFile(
-            "forecast.json",
-            bytes(json_data, encoding="utf-8"),
-            content_type="application/json",
-        )
-        response = self.client.post(
-            self.url, {"file": json_file}, format="multipart"
-        )
-
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(
-            response.data, {"message": "Данные успешно импортированы"}
-        )
-        forecast = Forecast.objects.first()
-        self.assertIsNotNone(forecast)
-        self.assertEqual(forecast.store_id, str(self.store.id))
-        self.assertEqual(forecast.sku_id, str(self.sku.id))
-        self.assertEqual(str(forecast.forecast_date), "2023-09-01")
-
-        forecast_data = ForecastData.objects.first()
-        self.assertIsNotNone(forecast_data)
-        self.assertEqual(forecast_data.forecast_id, forecast)
-        self.assertEqual(forecast_data.data, {"2023-09-01": 0})
-
-    def test_import_uncorrected_data(self):
-        data_for_json = {
-            "data": [
-                {
-                    "store": self.store.id,
-                    "forecast": {
-                        "sku": self.sku.id,
-                        "sales_units": {
-                            "2023-09-01": 0,
-                        },
-                    },
-                },
-            ]
-        }
-        json_data = json.dumps(data_for_json)
-        json_file = SimpleUploadedFile(
-            "forecast.json",
-            bytes(json_data, encoding="utf-8"),
-            content_type="application/json",
-        )
-        response = self.client.post(
-            self.url, {"file": json_file}, format="multipart"
-        )
-
+        temp_file_path = self.prepare_json_file(data_for_json)
+        response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn('error', response.data)
+        os.remove(temp_file_path)
 
     def test_import_data_with_path(self):
         data_for_json = {
@@ -167,37 +120,19 @@ class ImportDataViewTestCase(BaseUserTest):
                 },
             ]
         }
-        json_data = json.dumps(data_for_json)
-        temp_json_file_path = 'forecast_archive.json'
-        temp_json_file_dir = 'data'
-        self.temp_file_path = os.path.join(
-            temp_json_file_dir, temp_json_file_path)
-        with open(self.temp_file_path, 'w', encoding='utf-8') as temp_file:
-            temp_file.write(json_data)
-        response = self.client.post(
-            reverse("api:import-data"))
-
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        temp_file_path = self.prepare_json_file(data_for_json)
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         forecast = Forecast.objects.first()
         self.assertIsNotNone(forecast)
         self.assertEqual(forecast.store_id, str(self.store.id))
         self.assertEqual(forecast.sku_id, str(self.sku.id))
         self.assertEqual(str(forecast.forecast_date), "2023-09-01")
-
         forecast_data = ForecastData.objects.first()
         self.assertIsNotNone(forecast_data)
         self.assertEqual(forecast_data.forecast_id, forecast)
         self.assertEqual(forecast_data.data, {"2023-09-01": 0})
-        os.remove(self.temp_file_path)
-
-    def test_import_data_error(self):
-        json_file = SimpleUploadedFile("forecast.json", bytes(
-            '{"invalid_json": "data"}', encoding="utf-8"), content_type="application/json")
-        response = self.client.post(
-            '/api/v1/import-data/', {'file': json_file})
-
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIn('error', response.data)
+        os.remove(temp_file_path)
 
 
 class StockKeepingUnitViewsTest(BaseUserTest):

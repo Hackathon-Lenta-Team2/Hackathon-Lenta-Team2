@@ -1,7 +1,7 @@
 import json
 import os
-from django.conf import settings
 
+from django.conf import settings
 from django.db import transaction
 
 from forecasts.models import Forecast, ForecastData
@@ -15,8 +15,6 @@ def import_data_from_json(json_obj):
             file_path = os.path.join(settings.DATA_FILES_DIR, json_obj)
             with open(file_path, 'r') as json_file:
                 data = json.load(json_file)
-        else:
-            data = json.load(json_obj)
     except json.JSONDecodeError as e:
         raise ValueError("Ошибка в формате JSON: {}".format(str(e)))
     forecasts_to_insert = []

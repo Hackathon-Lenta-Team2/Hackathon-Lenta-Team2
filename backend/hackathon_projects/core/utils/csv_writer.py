@@ -1,7 +1,7 @@
 from datetime import date, datetime, timedelta
 
-from django.conf import settings
 import pandas as pd
+from django.conf import settings
 from django.db.models import QuerySet
 from typing_extensions import Any
 
