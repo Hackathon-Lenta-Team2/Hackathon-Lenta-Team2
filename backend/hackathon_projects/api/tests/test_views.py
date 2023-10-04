@@ -86,19 +86,16 @@ class ImportDataViewTestCase(BaseUserTest):
         return temp_file_path
 
     def test_import_uncorrected_data(self):
-        data_for_json = {
-            "data": [
-                {
-                    "forecast_date": "2023-09-01",
-                    "forecast": {
-                        "sku": self.sku.id,
-                        "sales_units": {
-                            "2023-09-01": 0,
-                        },
-                    },
-                },
-            ]
-        }
+        data_for_json = [
+            {"forecast_date": "2023-07-19",
+             "forecast": {
+                 "sku": self.sku.id,
+                 "sales_units": {
+                     "2023-07-19": 12.0
+                 }
+             }
+             }
+        ]
         temp_file_path = self.prepare_json_file(data_for_json)
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -106,20 +103,17 @@ class ImportDataViewTestCase(BaseUserTest):
         os.remove(temp_file_path)
 
     def test_import_data_with_path(self):
-        data_for_json = {
-            "data": [
-                {
-                    "store": self.store.id,
-                    "forecast_date": "2023-09-01",
-                    "forecast": {
-                        "sku": self.sku.id,
-                        "sales_units": {
-                            "2023-09-01": 0,
-                        },
-                    },
-                },
-            ]
-        }
+        data_for_json = [
+            {"store": self.store.id,
+             "forecast_date": "2023-07-19",
+             "forecast": {
+                 "sku": self.sku.id,
+                 "sales_units": {
+                     "2023-07-19": 12.0
+                 }
+             }
+             }
+        ]
         temp_file_path = self.prepare_json_file(data_for_json)
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -127,11 +121,11 @@ class ImportDataViewTestCase(BaseUserTest):
         self.assertIsNotNone(forecast)
         self.assertEqual(forecast.store_id, str(self.store.id))
         self.assertEqual(forecast.sku_id, str(self.sku.id))
-        self.assertEqual(str(forecast.forecast_date), "2023-09-01")
+        self.assertEqual(str(forecast.forecast_date), "2023-07-19")
         forecast_data = ForecastData.objects.first()
         self.assertIsNotNone(forecast_data)
         self.assertEqual(forecast_data.forecast_id, forecast)
-        self.assertEqual(forecast_data.data, {"2023-09-01": 0})
+        self.assertEqual(forecast_data.data, {"2023-07-19": 12.0})
         os.remove(temp_file_path)
 
 

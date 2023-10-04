@@ -15,15 +15,20 @@ def import_data_from_json(json_obj):
             file_path = os.path.join(settings.DATA_FILES_DIR, json_obj)
             with open(file_path, 'r') as json_file:
                 data = json.load(json_file)
+        elif isinstance(json_obj, list):  # Проверяем, что это список
+            data = json_obj
+        else:
+            raise ValueError("json_obj должен быть строкой или списком")
     except json.JSONDecodeError as e:
         raise ValueError("Ошибка в формате JSON: {}".format(str(e)))
+
     forecasts_to_insert = []
     forecast_data_to_insert = []
 
     with transaction.atomic():
-        for item in data['data']:
+        for item in data:  # Теперь data - это список, не словарь
             try:
-                store_id = item['store']
+                store_id = item.get('store')
                 sku_id = item['forecast']['sku']
                 forecast_date = item['forecast_date']
                 forecast_data = item['forecast']['sales_units']
