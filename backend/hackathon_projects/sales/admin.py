@@ -24,7 +24,7 @@ class SaleInfoAdmin(admin.ModelAdmin):
         "sales_rub_promo",
     )
     list_display_links = ("pk", "sale_id", "date")
-    list_filter = ("sale_id", "date")
+    list_filter = ("date",)
     list_editable = (
         "sales_type",
         "sales_units",
