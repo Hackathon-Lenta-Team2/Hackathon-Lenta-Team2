@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "forecasts",
     "core",
     "api",
+    'django_cleanup.apps.CleanupConfig',
 ]
 
 MIDDLEWARE = [

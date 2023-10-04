@@ -3,7 +3,7 @@ from rest_framework import routers
 
 from api.v_1.views.forecasts_views import ForecastViewSet, ImportDataView
 from api.v_1.views.profile_views import profile_view
-from api.v_1.views.sales_views import SalesViewSet, sales_import_view
+from api.v_1.views.sales_views import FactSalesImportViewSet, SalesViewSet
 from api.v_1.views.sku_views import (
     CategoryViewSet,
     GroupViewSet,
@@ -30,10 +30,12 @@ router.register("sales", SalesViewSet, basename="sales"),
 router.register("groups", GroupViewSet, basename="groups"),
 router.register("categories", CategoryViewSet, basename="categories"),
 router.register("subcategories", SubcategoryViewSet, basename="subcategories")
+router.register(
+    "import-sales", FactSalesImportViewSet, basename="import-sales"
+)
 
 urlpatterns = [
     path("", include(router.urls)),
     path("import-data/", ImportDataView.as_view(), name="import-data"),
     path("profile/", profile_view, name="profile"),
-    path("sales/import/", sales_import_view, name="sales-import"),
 ]

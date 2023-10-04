@@ -1,15 +1,13 @@
 from django.db.models import Prefetch
-from rest_framework import status
-from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.exceptions import ValidationError
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.request import Request
-from rest_framework.response import Response
+from rest_framework.viewsets import ModelViewSet
 
 from api.v_1.mixins import ListObjectsMixin
-from api.v_1.serializers.sales_serializers import SaleSerializer
-from core.utils.json_fact_sales_import import import_fact_sales_from_json
-from sales.models import Sale, SaleInfo
+from api.v_1.serializers.sales_serializers import (
+    FactSalesFileSerializer,
+    SaleSerializer,
+)
+from sales.models import FactSalesFile, Sale, SaleInfo
 
 
 class SalesViewSet(ListObjectsMixin):
@@ -63,12 +61,9 @@ class SalesViewSet(ListObjectsMixin):
         return sales.prefetch_related("sale_info")
 
 
-@api_view(("post",))
-@permission_classes((IsAuthenticated,))
-def sales_import_view(request: Request):
-    """Импорт данных фактических продаж."""
-    json_file = request.POST["data"]
-    print(type(json_file))
-    import_fact_sales_from_json(json_file)
-    print("HELLLO" * 10)
-    return Response(status=status.HTTP_200_OK)
+class FactSalesImportViewSet(ModelViewSet):
+    """Класс представления для загрузки файла фактических продаж."""
+
+    queryset = FactSalesFile.objects.all()
+    serializer_class = FactSalesFileSerializer
+    http_method_names = ("post",)
