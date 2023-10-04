@@ -19,10 +19,5 @@ class BaseUserTest(APITestCase):
         cls.user = UserFactory()
         cls.token = Token.objects.create(user=cls.user)
 
-    def create_token(self):
-        return self.token
-
     def user_authorization(self):
-        self.client.credentials(
-            HTTP_AUTHORIZATION="Token " + self.create_token().key
-        )
+        self.client.credentials(HTTP_AUTHORIZATION="Token " + self.token.key)
