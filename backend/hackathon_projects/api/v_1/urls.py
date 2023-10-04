@@ -3,12 +3,19 @@ from rest_framework import routers
 
 from api.v_1.views.forecasts_views import ForecastViewSet, ImportDataView
 from api.v_1.views.profile_views import profile_view
-from api.v_1.views.sales_views import SalesViewSet
-from api.v_1.views.sku_views import (CategoryViewSet, GroupViewSet,
-                                     StockKeepingUnitViewSet,
-                                     SubcategoryViewSet)
-from api.v_1.views.stores_views import (CityViewSet, DivisionViewSet,
-                                        FormatViewSet, StoreViewSet)
+from api.v_1.views.sales_views import SalesViewSet, sales_import_view
+from api.v_1.views.sku_views import (
+    CategoryViewSet,
+    GroupViewSet,
+    StockKeepingUnitViewSet,
+    SubcategoryViewSet,
+)
+from api.v_1.views.stores_views import (
+    CityViewSet,
+    DivisionViewSet,
+    FormatViewSet,
+    StoreViewSet,
+)
 
 app_name = "api"
 
@@ -20,12 +27,13 @@ router.register("stores", StoreViewSet, basename="stores")
 router.register("products", StockKeepingUnitViewSet, basename="products")
 router.register("forecasts", ForecastViewSet, basename="forecasts")
 router.register("sales", SalesViewSet, basename="sales"),
-router.register('groups', GroupViewSet, basename='groups'),
-router.register('categories', CategoryViewSet, basename='categories'),
-router.register('subcategories', SubcategoryViewSet, basename='subcategories')
+router.register("groups", GroupViewSet, basename="groups"),
+router.register("categories", CategoryViewSet, basename="categories"),
+router.register("subcategories", SubcategoryViewSet, basename="subcategories")
 
 urlpatterns = [
     path("", include(router.urls)),
     path("import-data/", ImportDataView.as_view(), name="import-data"),
-    path("profile/", profile_view, name="profile")
+    path("profile/", profile_view, name="profile"),
+    path("sales/import/", sales_import_view, name="sales-import"),
 ]
