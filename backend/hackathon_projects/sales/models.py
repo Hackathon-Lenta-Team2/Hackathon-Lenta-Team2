@@ -26,6 +26,12 @@ class Sale(models.Model):
         verbose_name = "Продажа"
         verbose_name_plural = "Продажи"
         ordering = ("id",)
+        constraints = [
+            models.UniqueConstraint(
+                name="unique_store_and_sku",
+                fields=["store_id", "sku_id"],
+            )
+        ]
 
     def __str__(self) -> str:
         return (
