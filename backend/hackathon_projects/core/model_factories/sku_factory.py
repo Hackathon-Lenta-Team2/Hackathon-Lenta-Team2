@@ -6,7 +6,7 @@ from products.models import UOM, Category, Group, StockKeepingUnit, Subcategory
 
 
 class GroupFactory(factory.django.DjangoModelFactory):
-    id = secrets.token_hex(32)
+    id = secrets.token_hex(16)
 
     class Meta:
         model = Group
@@ -14,7 +14,7 @@ class GroupFactory(factory.django.DjangoModelFactory):
 
 
 class CategoryFactory(factory.django.DjangoModelFactory):
-    id = secrets.token_hex(32)
+    id = secrets.token_hex(16)
     group_id = factory.SubFactory(GroupFactory)
 
     class Meta:
@@ -23,7 +23,7 @@ class CategoryFactory(factory.django.DjangoModelFactory):
 
 
 class SubCategoryFactory(factory.django.DjangoModelFactory):
-    id = secrets.token_hex(32)
+    id = secrets.token_hex(16)
     category_id = factory.SubFactory(CategoryFactory)
 
     class Meta:

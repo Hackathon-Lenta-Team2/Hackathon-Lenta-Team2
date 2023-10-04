@@ -21,3 +21,4 @@ class Command(BaseCommand):
             category = Subcategory(
                 id=row['pr_subcat_id'], category_id=category)
             category.save()
+#

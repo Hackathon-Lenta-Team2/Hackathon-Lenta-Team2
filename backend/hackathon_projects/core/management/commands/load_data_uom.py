@@ -15,5 +15,5 @@ class Command(BaseCommand):
             if id == 1:
                 uom = UOM(id=id, title='шт')
             else:
-                uom = UOM(id=id, title='гр')
+                uom = UOM(id=id, title='вес(г)')
             uom.save()

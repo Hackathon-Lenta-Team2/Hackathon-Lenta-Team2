@@ -9,8 +9,8 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         print("Loading size data")
 
-        for row in DictReader(open('st_df.csv')):
-            id = row['st_type_size_id']
+        for row in DictReader(open("st_df.csv")):
+            id = row["st_type_size_id"]
 
-            size = Size(id=id)
+            size = Size(id=id, type=f"Тип размера {id}")
             size.save()

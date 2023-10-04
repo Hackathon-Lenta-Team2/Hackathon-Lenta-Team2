@@ -26,3 +26,4 @@ class Command(BaseCommand):
             product = StockKeepingUnit(
                 id=row['pr_sku_id'], group_id=group, cat_id=category, subcat_id=subcat, uom_id=uom)
             product.save()
+#

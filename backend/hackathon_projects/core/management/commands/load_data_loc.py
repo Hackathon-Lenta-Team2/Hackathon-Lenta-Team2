@@ -12,5 +12,5 @@ class Command(BaseCommand):
         for row in DictReader(open('st_df.csv')):
             id = row['st_type_loc_id']
 
-            loc = Location(id=id)
+            loc = Location(id=id, type=f"Тип локации {id}")
             loc.save()

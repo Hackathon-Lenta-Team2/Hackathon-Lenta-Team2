@@ -1,9 +1,13 @@
 from django.db.models import Prefetch
 from rest_framework.exceptions import ValidationError
+from rest_framework.viewsets import ModelViewSet
 
 from api.v_1.mixins import ListObjectsMixin
-from api.v_1.serializers.sales_serializers import SaleSerializer
-from sales.models import Sale, SaleInfo
+from api.v_1.serializers.sales_serializers import (
+    FactSalesFileSerializer,
+    SaleSerializer,
+)
+from sales.models import FactSalesFile, Sale, SaleInfo
 
 
 class SalesViewSet(ListObjectsMixin):
@@ -55,3 +59,11 @@ class SalesViewSet(ListObjectsMixin):
                 )
             )
         return sales.prefetch_related("sale_info")
+
+
+class FactSalesImportViewSet(ModelViewSet):
+    """Класс представления для загрузки файла фактических продаж."""
+
+    queryset = FactSalesFile.objects.all()
+    serializer_class = FactSalesFileSerializer
+    http_method_names = ("post",)

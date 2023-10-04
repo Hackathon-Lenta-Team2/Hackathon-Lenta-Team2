@@ -14,3 +14,4 @@ class Command(BaseCommand):
 
             city = City(id=id)
             city.save()
+#

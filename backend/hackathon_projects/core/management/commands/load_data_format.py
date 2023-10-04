@@ -14,3 +14,4 @@ class Command(BaseCommand):
 
             format = Format(id=id)
             format.save()
+#

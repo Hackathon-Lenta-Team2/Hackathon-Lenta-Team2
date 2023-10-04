@@ -6,7 +6,7 @@ from stores.models import City, Division, Format, Location, Size, Store
 
 
 class CityFactory(factory.django.DjangoModelFactory):
-    id = secrets.token_hex(32)
+    id = secrets.token_hex(16)
 
     class Meta:
         model = City
@@ -14,7 +14,7 @@ class CityFactory(factory.django.DjangoModelFactory):
 
 
 class DivisionFactory(factory.django.DjangoModelFactory):
-    id = secrets.token_hex(32)
+    id = secrets.token_hex(16)
 
     class Meta:
         model = Division

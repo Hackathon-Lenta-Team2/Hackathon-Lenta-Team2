@@ -19,3 +19,4 @@ class Command(BaseCommand):
 
             category = Category(id=row['pr_cat_id'], group_id=group)
             category.save()
+#
