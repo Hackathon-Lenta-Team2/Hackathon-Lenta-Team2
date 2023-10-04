@@ -1,5 +1,6 @@
 from django_filters import rest_framework as filters
 
+from forecasts.models import Forecast
 from products.models import Category, Group, StockKeepingUnit, Subcategory
 
 
@@ -33,3 +34,11 @@ class StockKeepingUnitFilter(filters.FilterSet):
     class Meta:
         model = StockKeepingUnit
         fields = ['subcat_id']
+
+
+class ForecastFilter(filters.FilterSet):
+    """Фильтр представления для прогнозов."""
+
+    class Meta:
+        model = Forecast
+        fields = ['store', 'sku', 'forecast_date']
