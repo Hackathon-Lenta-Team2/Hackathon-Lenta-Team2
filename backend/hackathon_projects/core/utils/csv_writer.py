@@ -1,4 +1,4 @@
-from datetime import date, datetime, timedelta
+from datetime import date, datetime, timedelta  # noqa
 
 import pandas as pd
 from django.conf import settings
@@ -13,10 +13,16 @@ class CSVWriter:
     Для запуска используется метод write().
     """
 
+    # последние данные по продажам есть на 18-07-2023
+    RESEARCH_DAY: date = date(year=2023, month=7, day=18)
+
+    # для запуска на реальную дату использовать
+    # RESEARCH_DAY: date = datetime.today().date()
+
     def __init__(self) -> None:
         self.__file_name = settings.DATA_FILES_DIR / "ds_data.csv"
         self.__rows_to_write = []
-        self.__date_now = datetime.today().date()
+        self.__date_now = self.RESEARCH_DAY
         self.__date_21_before = self.__get_date_some_range_before(21)
 
     def write(self):
