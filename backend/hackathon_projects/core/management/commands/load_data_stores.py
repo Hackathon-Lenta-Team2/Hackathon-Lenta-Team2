@@ -28,3 +28,4 @@ class Command(BaseCommand):
             store = Store(
                 id=row['st_id'], city=city, division=div, type_format=format, loc=loc, size=size)
             store.save()
+#

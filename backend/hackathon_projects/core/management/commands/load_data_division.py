@@ -9,8 +9,9 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         print("Loading division data")
 
-        for row in DictReader(open('st_df.csv')):
-            id = row['st_division_code']
+        for row in DictReader(open("st_df.csv")):
+            id = row["st_division_code"]
 
             div = Division(id=id)
             div.save()
+#

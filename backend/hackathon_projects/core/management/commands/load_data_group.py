@@ -1,6 +1,6 @@
 from csv import DictReader
 from django.core.management import BaseCommand
-from stores.models import Group
+from products.models import Group
 
 
 class Command(BaseCommand):
