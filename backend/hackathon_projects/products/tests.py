@@ -18,7 +18,7 @@ class GroupModelTest(TestCase):
     def setUpClass(cls) -> None:
         super().setUpClass()
 
-        cls.id = secrets.token_hex(32)
+        cls.id = secrets.token_hex(16)
         cls.group = Group.objects.create(id=cls.id)
 
     def test_object_was_created(self):
@@ -42,10 +42,10 @@ class CategoryModelTest(TestCase):
     def setUpClass(cls) -> None:
         super().setUpClass()
 
-        cls.group_id = secrets.token_hex(32)
+        cls.group_id = secrets.token_hex(16)
         cls.group = Group.objects.create(id=cls.group_id)
 
-        cls.id = secrets.token_hex(32)
+        cls.id = secrets.token_hex(16)
         cls.category = Category.objects.create(
             id=cls.id, group_id=cls.group)
 
@@ -70,14 +70,14 @@ class SubcategoryModelTest(TestCase):
     def setUpClass(cls) -> None:
         super().setUpClass()
 
-        cls.group_id = secrets.token_hex(32)
+        cls.group_id = secrets.token_hex(16)
         cls.group = Group.objects.create(id=cls.group_id)
 
-        cls.category_id = secrets.token_hex(32)
+        cls.category_id = secrets.token_hex(16)
         cls.category = Category.objects.create(
-            id=cls.id, group_id=cls.group)
+            id=cls.category_id, group_id=cls.group)
 
-        cls.id = secrets.token_hex(32)
+        cls.id = secrets.token_hex(16)
         cls.subcategory = Subcategory.objects.create(
             id=cls.id, category_id=cls.category)
 
@@ -98,7 +98,7 @@ class UOMModelTest(TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         super().setUpClass()
-        cls.title = 'А' * 240
+        cls.title = 'А' * 150
         cls.id = random.randint(1, 100)
         cls.uom = UOM.objects.create(id=cls.id, title=cls.title)
 
@@ -119,7 +119,7 @@ class StockKeepingUnitTest(TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         super().setUpClass()
-        cls.id = secrets.token_hex(32)
+        cls.id = secrets.token_hex(16)
         cls.group: Group = GroupFactory()
         cls.category: Category = CategoryFactory()
         cls.subcategory: Subcategory = SubCategoryFactory()

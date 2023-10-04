@@ -19,7 +19,7 @@ class CityModelTests(TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.id: str = secrets.token_hex(32)
+        cls.id: str = secrets.token_hex(16)
         cls.city: City = City.objects.create(id=cls.id)
 
     def test_object_was_created(self):
@@ -46,7 +46,7 @@ class DivisionModelTests(TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.id: str = secrets.token_hex(32)
+        cls.id: str = secrets.token_hex(16)
         cls.division: Division = Division.objects.create(id=cls.id)
 
     def test_object_was_created(self):
@@ -159,7 +159,7 @@ class StoreModelTests(TestCase):
     def setUpClass(cls):
         super().setUpClass()
 
-        cls.store_id: str = secrets.token_hex(32)
+        cls.store_id: str = secrets.token_hex(16)
         cls.city: City = CityFactory()
         cls.division: Division = DivisionFactory()
         cls.format: Format = FormatFactory()
