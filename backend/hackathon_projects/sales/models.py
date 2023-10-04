@@ -100,8 +100,7 @@ class FactSalesFile(models.Model):
     )
 
     class Meta:
-        verbose_name = "Файл импорта продаж"
-        verbose_name_plural = "Файлы импорта продаж"
+        verbose_name = verbose_name_plural = "Импорт фактических продаж"
         ordering = ("id",)
 
     def __str__(self) -> str:
@@ -113,6 +112,7 @@ def start_import(sender, instance, created, **kwargs) -> None:
     """Запускает импорт из файла в БД при получении файла."""
     if created:
         from core.utils.json_fact_sales_import import FactSalesImportFromCSV
+
         FactSalesImportFromCSV(instance).import_data()
 
 
