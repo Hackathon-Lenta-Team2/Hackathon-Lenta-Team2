@@ -42,7 +42,8 @@ class ForecastViewSet(ListObjectsMixin):
     @action(detail=False, methods=['get'])
     def export_excel(self, request):
         queryset = self.filter_queryset(self.get_queryset())
-        export_to_excel(queryset)
+        response = export_to_excel(queryset)
+        return response
 
 
 class ImportDataView(APIView):
