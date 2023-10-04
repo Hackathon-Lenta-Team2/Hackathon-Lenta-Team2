@@ -58,6 +58,15 @@ class StockKeepingUnit(BaseIDModel):
         help_text="ID маркера товара (вес/шт)",
     )
 
+    def save(self, *args, **kwargs):
+        if not self.title:
+            self.title = self.get_default_store_title(self.id)
+        super().save(*args, **kwargs)
+
+    @staticmethod
+    def get_default_store_title(id: str) -> str:
+        return f"Product {id}"
+
     class Meta:
         verbose_name = "Товар"
         verbose_name_plural = "Товары"
