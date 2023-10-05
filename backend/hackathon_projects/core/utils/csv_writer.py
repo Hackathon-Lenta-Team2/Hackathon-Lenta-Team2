@@ -77,8 +77,7 @@ class CSVWriter:
         return (
             sale.sale_info.values("date")
             .annotate(sum_sales_units=Sum("sales_units"))
-            .order_by("-date")
-            .filter(sum_sales_units__gt=0)[:22]
+            .order_by("-date")[:22]
         )
 
     @staticmethod
@@ -102,4 +101,4 @@ class CSVWriter:
         """Пишет rows_to_write в CSV файл."""
         lines = pd.DataFrame(self.__rows_to_write)
         # "-" где нет данных
-        lines.to_csv(self.__file_name, index=False, na_rep="-")
+        lines.to_csv(self.__file_name, index=False, na_rep="Nan")
