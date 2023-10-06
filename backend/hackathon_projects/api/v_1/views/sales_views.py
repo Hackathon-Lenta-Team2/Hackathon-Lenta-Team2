@@ -1,4 +1,5 @@
 from django.db.models import Prefetch
+from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
 from rest_framework.viewsets import ModelViewSet
 
@@ -7,6 +8,7 @@ from api.v_1.serializers.sales_serializers import (
     FactSalesFileSerializer,
     SaleSerializer,
 )
+from core.utils.excel_writer import ExelExport
 from sales.models import FactSalesFile, Sale, SaleInfo
 
 
@@ -60,6 +62,12 @@ class SalesViewSet(ListObjectsMixin):
                 )
             )
         return sales.prefetch_related("sale_info")
+
+    @action(url_path="export", detail=False, methods=["get"])
+    def export_excel(self, request):
+        queryset = self.get_queryset()
+        response = ExelExport(queryset, is_forecast=False).export()
+        return response
 
 
 class FactSalesImportViewSet(ModelViewSet):
