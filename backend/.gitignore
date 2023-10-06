@@ -153,7 +153,6 @@ dmypy.json
 cython_debug/
 
 
-migrations/
 static/
 /hackathon_projects/data/query_example.csv
 data/
