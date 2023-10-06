@@ -36,6 +36,6 @@ router.register(
 
 urlpatterns = [
     path("", include(router.urls)),
-    path("import-data/", ImportDataView.as_view(), name="import-data"),
+    path("import-forecasts/", ImportDataView.as_view(), name="import-data"),
     path("profile/", profile_view, name="profile"),
 ]
