@@ -8,7 +8,7 @@ info:
     Целью данного проекта было создание сервиса, способного прогнозировать спрос на товары собственного производства, что позволило бы сети гипермаркетов оптимизировать свои запасы и улучшить предложение товаров для потребителей.
     
     Для достижения этой цели команда проекта провела глубокий анализ данных, используя различные методы машинного обучения, а также разработала алгоритмы и модели, которые позволили бы с высокой точностью предсказывать спрос на товары.
-               
+
 tags:
 - name: "Authorization"
   description: "Авторизация"
@@ -25,13 +25,13 @@ paths:
   /api/v1/categories/:
     get:
       operationId: Список категорий
-      description: Класс представления для Категорий.
+      description: Получение списка категорий продуктов с фильтром по группе.
       tags:
       - Products
       parameters:
         - name: group_id
           in: query
-          description: Group_id
+          description: ID групп продуктов
           required: false
           schema:
             type: string
@@ -48,8 +48,8 @@ paths:
           description: ''
   /api/v1/cities/:
     get:
-      operationId: api_v1_cities_list
-      description: Класс представления для Городов.
+      operationId: Список городов
+      description: Получение списка городов.
       tags:
       - Stores
       security:
@@ -65,8 +65,8 @@ paths:
           description: ''
   /api/v1/divisions/:
     get:
-      operationId: api_v1_divisions_list
-      description: Класс представления для Подразделений.
+      operationId: Список подразделений
+      description: Получение списка подразделений.
       tags:
       - Stores
       security:
@@ -82,19 +82,21 @@ paths:
           description: ''
   /api/v1/forecasts/:
     get:
-      operationId: api_v1_forecasts_list
-      description: Класс представления для Прогнозов.
+      operationId: Список прогнозов
+      description: Получение списка прогнозов.
       tags:
       - Forecasts
       parameters:
         - name: store
           in: query
-          required: false
+          description: 'список ID супермаркетов'
+          required: true
           schema:
             type: string
         - name: sku
           in: query
-          required: false
+          description: 'список ID продуктов'
+          required: true
           schema:
             type: string
         - name: date_after
@@ -120,10 +122,10 @@ paths:
                 items:
                   $ref: '#/components/schemas/Forecast'
           description: ''
-  /api/v1/forecasts/export_excel/:
+  /api/v1/forecasts/export/:
     get:
-      operationId: api_v1_forecasts_export_excel
-      description: Класс представления для Прогнозов.
+      operationId: Экспорт прогнозов
+      description: Экспорт данных по прогнозам в excel файл.
       tags:
       - Forecasts
       parameters:
@@ -143,15 +145,11 @@ paths:
       - tokenAuth: []
       responses:
         '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Forecast'
-          description: ''
+          description: output.xlsx
   /api/v1/formats/:
     get:
-      operationId: api_v1_formats_list
-      description: Класс представления для Форматов типа супермаркета.
+      operationId: Списов форматов супермаркетов
+      description: Получение списка форматов типа супермаркета.
       tags:
       - Stores
       security:
@@ -167,19 +165,12 @@ paths:
           description: ''
   /api/v1/groups/:
     get:
-      operationId: api_v1_groups_list
-      description: Класс представления для Групп.
+      operationId: Список групп
+      description: Получение списка групп продуктов.
       tags:
       - Products
       security:
       - tokenAuth: []
-      parameters:
-        - name: id
-          in: query
-          description: Group ID
-          required: false
-          schema:
-            type: string
       responses:
         '200':
           content:
@@ -189,10 +180,13 @@ paths:
                 items:
                   $ref: '#/components/schemas/Group'
           description: ''
-  /api/v1/import-data/:
+  /api/v1/import-forecasts/:
     get:
-      operationId: api_v1_import_data_retrieve
-      description: Endpoint активации импорта данных прогнозов в БД. Запускается сервисом DS.
+      operationId: Импорт данных прогнозов
+      description: |-
+        Endpoint активации импорта данных прогнозов в БД. 
+        
+        Запускается сервисом DS.
       tags:
       - Forecasts
       security:
@@ -202,8 +196,13 @@ paths:
           description: No response body
   /api/v1/import-sales/:
     post:
-      operationId: api_v1_import_sales
-      description: Endpoint для получения файла импорта в формате .CSV
+      operationId: Импорт данных фактических продаж
+      description: |-
+        Endpoint для загрузки файла импорта в формате .CSV.
+        Файл должен содержать следующие поля:
+          - st_id, pr_sku_id, date, pr_sales_type_id, 
+          - pr_sales_in_units, pr_promo_sales_in_units, 
+          - pr_sales_in_rub, pr_promo_sales_in_rub
       tags:
       - Sales
       requestBody:
@@ -229,14 +228,14 @@ paths:
           description: ''
   /api/v1/products/:
     get:
-      operationId: api_v1_products_list
-      description: Класс представления для Товаров.
+      operationId: Список продуктов
+      description: Получение списка продуктов. Фильтр по подкатегории.
       tags:
       - Products
       parameters:
         - name: subcategory_id
           in: query
-          description: Subcategory_id
+          description: ID подкатегорий продуктов
           required: false
           schema:
             type: string
@@ -253,7 +252,7 @@ paths:
           description: ''
   /api/v1/profile/:
     get:
-      operationId: api_v1_profile_retrieve
+      operationId: Профиль пользователя
       description: Функция отображения информации о пользователе.
       tags:
       - Authorization
@@ -261,21 +260,27 @@ paths:
       - tokenAuth: []
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Profile'
+          description: ''
   /api/v1/sales/:
     get:
-      operationId: api_v1_sales_list
-      description: Класс представления для Продаж.
+      operationId: Список фактических продаж
+      description: Получения списка продаж.
       tags:
       - Sales
       parameters:
         - name: store
           in: query
+          description: 'список ID супермаркетов'
           required: true
           schema:
             type: string
         - name: sku
           in: query
+          description: 'список ID продуктов'
           required: true
           schema:
             type: string
@@ -302,15 +307,32 @@ paths:
                 items:
                   $ref: '#/components/schemas/Sale'
           description: ''
+  /api/v1/sales/export/:
+    get:
+      operationId: Экспорт фактических продаж
+      description: Экспорт данных фактических продаж в виде Excel файла.
+      tags:
+        - Sales
+      security:
+        - tokenAuth: [ ]
+      responses:
+        '200':
+          description: output.xlsx
   /api/v1/stores/:
     get:
-      operationId: api_v1_stores_list
+      operationId: Список супермаркетов
       description: Класс представления для Супермаркетов.
       parameters:
       - name: search
         required: false
         in: query
-        description: A search term.
+        description: |- 
+          Запрос поиска для фильтрации супермаркетов.
+          
+          Поиск идёт по таким полям как:
+          - Название супермаркета, Тип локации
+          - Название города, Тип размера
+          - Название подразделения, Название типа формата
         schema:
           type: string
       tags:
@@ -328,14 +350,14 @@ paths:
           description: ''
   /api/v1/subcategories/:
     get:
-      operationId: api_v1_subcategories_list
-      description: Класс представления для Подкатегорий.
+      operationId: Список подкатегорий
+      description: Получения списка подкатегорий продуктов. Фильтр по категориям продуктов.
       tags:
       - Products
       parameters:
         - name: category_id
           in: query
-          description: Category_id
+          description: ID категории продуктов
           required: false
           schema:
             type: string
@@ -352,8 +374,8 @@ paths:
           description: ''
   /auth/token/login/:
     post:
-      operationId: auth_token_login_create
-      description: Use this endpoint to obtain user authentication token.
+      operationId: Вход
+      description: Получения токена аутентификации.
       tags:
       - Authorization
       requestBody:
@@ -379,8 +401,8 @@ paths:
           description: ''
   /auth/token/logout/:
     post:
-      operationId: auth_token_logout_create
-      description: Use this endpoint to logout user (remove user authentication token).
+      operationId: Выход
+      description: Удаление токена аутентификации.
       tags:
       - Authorization
       security:
@@ -504,6 +526,36 @@ components:
           maxLength: 32
       required:
       - id
+    Profile:
+      type: object
+      description: Отображение информации о пользователе.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        username:
+          type: string
+          title: Имя пользователя
+          description: Обязательное поле. Не более 150 символов. Только буквы, цифры
+            и символы @/./+/-/_.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        first_name:
+          type: string
+          title: Имя
+          maxLength: 150
+        last_name:
+          type: string
+          title: Фамилия
+          maxLength: 150
+      required:
+        - email
+        - id
+        - username
     Sale:
       type: object
       description: Сериализатор для модели Sale.
@@ -543,7 +595,7 @@ components:
           title: Число проданных товаров с признаком промо
         sales_rub:
           type: integer
-          
+
           title: Продажи без признака промо в рублях
         sales_rub_promo:
           type: integer
@@ -652,17 +704,19 @@ components:
       properties:
         auth_token:
           type: string
-          
+
     TokenCreate:
       type: object
       properties:
-        password:
-          type: string
         email:
           type: string
+          description: Эл. почта пользователя
+        password:
+          type: string
+          description: Пароль пользователя
   securitySchemes:
     tokenAuth:
       type: apiKey
       in: header
-      name: Authorization
-      description: Token-based authentication with required prefix "Token"
+      name: Авторизация
+      description: Аутентификация основанная на Токене с префиксом "Token".
