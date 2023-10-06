@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # в директории infra/
 # копировать дамп в контейнер c БД
 docker compose cp ./dump_db_hakathon.sql db:var/lib/postgresql/
