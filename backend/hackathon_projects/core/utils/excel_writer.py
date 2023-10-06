@@ -1,5 +1,6 @@
 import pandas as pd
-
+import xlsxwriter
+from django.http import HttpResponse
 from forecasts.models import ForecastData
 
 
@@ -14,21 +15,14 @@ def export_to_excel(queryset):
 
     sales_units_data = {}
 
-    make_columns_for_the_table(sales_units_data, queryset, data)
-    make_rows_for_the_table(sales_units_data, queryset, data)
+    _make_columns_for_the_table(sales_units_data, queryset, data)
+    _make_rows_for_the_table(sales_units_data, queryset, data)
+    response = _make_excel_file(data)
 
-    df = pd.DataFrame(data)
-
-    writer = pd.ExcelWriter("output.xlsx", engine="xlsxwriter")
-    df.to_excel(writer, sheet_name="Sheet1")
-
-    writer.book
-    writer.sheets["Sheet1"]
-
-    writer.close()
+    return response
 
 
-def make_columns_for_the_table(sales_units_data, queryset, data):
+def _make_columns_for_the_table(sales_units_data, queryset, data):
     """Функция создания столбцов в таблице excel."""
 
     for forecast in queryset:
@@ -46,7 +40,7 @@ def make_columns_for_the_table(sales_units_data, queryset, data):
     return data
 
 
-def make_rows_for_the_table(sales_units_data, queryset, data):
+def _make_rows_for_the_table(sales_units_data, queryset, data):
     """Функция создания строк в таблице excel."""
 
     for forecast in queryset:
@@ -61,3 +55,17 @@ def make_rows_for_the_table(sales_units_data, queryset, data):
             data[date].append(sales_units.get(date, None))
 
     return data
+
+
+def _make_excel_file(data):
+    """Функция создания файла excel."""
+
+    df = pd.DataFrame(data)
+    output = io.BytesIO()
+    with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+        df.to_excel(writer, sheet_name='Sheet1', index=False)
+    response = HttpResponse(
+        output.getvalue(), content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename="output.xlsx"'
+
+    return response
