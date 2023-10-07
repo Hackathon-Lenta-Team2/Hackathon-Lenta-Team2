@@ -68,14 +68,7 @@ def make_forecast(path: str) -> None:
             json.dump(result, file)
             app_logger.info("data saved")
     app_logger.info(message)
-    # resp = requests.get("http://localhost:8001/ds/ready")  # for local tests
     send_signal_to_back()
-
-
-# for local tests
-# @app.get("/ds/ready")
-# def forecast_ready():
-#     pass
 
 
 @app.get("/ds-service/start")
