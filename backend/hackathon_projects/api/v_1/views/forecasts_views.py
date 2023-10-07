@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from loguru import logger
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -50,6 +51,7 @@ class ImportDataView(APIView):
 
     def get(self, request):
         try:
+            logger.info("Бэк получил сигнал от DS о готовности данных.")
             ds_data_import_task.delay()
             return Response(
                 {"message": "Операция импорта данных началась."},
@@ -57,6 +59,7 @@ class ImportDataView(APIView):
             )
         except Exception as err:
             error_message = f"Unexpected {err=}"
+            logger.error(error_message)
             return Response(
                 {"error": error_message}, status=status.HTTP_400_BAD_REQUEST
             )
