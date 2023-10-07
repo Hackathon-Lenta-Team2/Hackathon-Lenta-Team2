@@ -160,10 +160,10 @@ CORS_ORIGIN_ALLOW_ALL = True
 # ]
 
 # .env
-CELERY_BROKER_URL = os.getenv(
+CELERY_BROKER_URL: str = os.getenv(
     "CELERY_BROKER_URL", default="redis://localhost:6379/0"
 )
-DS_START_FORECAST_URL = os.getenv(
+DS_START_FORECAST_URL: str = os.getenv(
     "DS_START_FORECAST_URL", default="http://ds:7000/ds-service/start/"
 )
 RUN_DS_DATA_PREPARATION_CRON_HOUR: str = os.getenv(
