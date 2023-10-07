@@ -97,7 +97,7 @@ def make_forecast(path: str) -> None:
 #     pass
 
 
-@app.get("/ds/start")
+@app.get("/ds-service/start")
 async def main(background_tasks: BackgroundTasks) -> dict:
     """Runs forecast in the background."""
     background_tasks.add_task(make_forecast, path=dataDir + "ds_data.csv")
