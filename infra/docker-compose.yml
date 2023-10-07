@@ -17,6 +17,7 @@ services:
     restart: unless-stopped
     volumes:
       - static_volume:/app/hackathon_projects/static/
+      - shared_volume:/app/hackathon_projects/data/
     depends_on:
       - db
     env_file:
@@ -31,7 +32,9 @@ services:
     container_name: celery-worker
     build: ../backend/
     restart: unless-stopped
-    command: celery -A hackathon_projects worker -l INFO
+    volumes:
+      - shared_volume:/app/hackathon_projects/data/
+    command: celery -A hackathon_projects worker  -B -l INFO
     depends_on:
       - db
       - redis
@@ -67,3 +70,4 @@ services:
 volumes:
   static_volume:
   db_data:
+  shared_volume:
