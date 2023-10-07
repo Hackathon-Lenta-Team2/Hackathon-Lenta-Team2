@@ -15,4 +15,4 @@ def send_signal_to_ds_service():
         else:
             logger.error("DS сервис недоступен.")
     except requests.exceptions.ConnectionError as er:
-        logger.error(er)
+        logger.error(f"DS сервис недоступен. {er}")
