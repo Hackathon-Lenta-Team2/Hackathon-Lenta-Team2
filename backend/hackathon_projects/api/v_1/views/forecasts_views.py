@@ -8,8 +8,8 @@ from rest_framework.views import APIView
 from api.v_1.filters import ForecastFilter
 from api.v_1.mixins import ListObjectsMixin
 from api.v_1.serializers.forecasts_serializers import ForecastSerializer
+from core.services.tasks import ds_data_import_task
 from core.utils.excel_writer import ExelExport
-from core.utils.json_data_import import import_data_from_json
 from forecasts.models import Forecast
 
 
@@ -50,9 +50,9 @@ class ImportDataView(APIView):
 
     def get(self, request):
         try:
-            import_data_from_json("forecast_archive.json")
+            ds_data_import_task.delay()
             return Response(
-                {"message": "Данные успешно импортированы"},
+                {"message": "Операция импорта данных началась."},
                 status=status.HTTP_200_OK,
             )
         except Exception as err:
