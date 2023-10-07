@@ -1,0 +1,7 @@
+venv/
+.idea/
+__pycache__/
+*.pdf
+scripts/rf.pkl
+scripts/src/rf.joblib
+old_data/

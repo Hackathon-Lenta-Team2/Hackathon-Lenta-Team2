@@ -23,6 +23,15 @@ services:
     env_file:
       - ./.env
 
+  ds:
+    container_name: ds_service
+    build: ../ds/scripts/
+    restart: unless-stopped
+    volumes:
+      - shared_volume:/app/src/tmp/
+    depends_on:
+      - back
+
   redis:
     container_name: redis
     image: redis:7.2.1-alpine
