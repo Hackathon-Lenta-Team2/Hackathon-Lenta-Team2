@@ -31,6 +31,8 @@ services:
       - shared_volume:/app/src/tmp/
     depends_on:
       - back
+    env_file:
+      - ./.env.ds
 
   redis:
     container_name: redis
