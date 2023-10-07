@@ -169,3 +169,9 @@ DATA_FILES_DIR = BASE_DIR / "data"
 CELERY_BROKER_URL = os.getenv(
     "CELERY_BROKER_URL", default="redis://localhost:6379/0"
 )
+DS_START_FORECAST_URL = os.getenv(
+    "DS_START_FORECAST_URL", default="http://localhost/ds/start/"
+)
+RUN_DS_DATA_PREPARATION_CRON_HOUR: str = os.getenv(
+    "RUN_DS_DATA_PREPARATION_CRON_HOUR", default="04"
+)
