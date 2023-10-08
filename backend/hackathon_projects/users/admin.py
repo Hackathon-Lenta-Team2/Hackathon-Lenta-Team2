@@ -9,38 +9,41 @@ MAX_LENGTH = 254
 
 
 class CustomUserCreationForm(UserCreationForm):
-    """ Форма регистрации нового пользователя """
+    """Форма регистрации нового пользователя"""
 
     email = forms.EmailField(
-        label=('email'),
+        label=("email"),
         max_length=MAX_LENGTH,
-        widget=forms.EmailInput(attrs={'autocomplete': 'Email'})
+        widget=forms.EmailInput(attrs={"autocomplete": "Email"}),
     )
 
     class Meta:
         model = User
-        fields = ('username', 'email')
+        fields = ("username", "email")
 
 
 class CustomUserAdmin(UserAdmin):
-    """ Настройки админ-панели для пользователей """
+    """Настройки админ-панели для пользователей"""
 
     add_fieldsets = (
-        (None, {
-            'classes': ('wide',),
-            'fields': ('username', 'email', 'password1', 'password2'),
-        }),
+        (
+            None,
+            {
+                "classes": ("wide",),
+                "fields": ("username", "email", "password1", "password2"),
+            },
+        ),
     )
 
     add_form = CustomUserCreationForm
     list_display = (
-        'username',
-        'id',
-        'email',
-        'first_name',
-        'last_name',
+        "username",
+        "id",
+        "email",
+        "first_name",
+        "last_name",
     )
-    list_filter = ('email', 'first_name')
+    list_filter = ("email", "first_name")
 
 
 admin.site.register(User, CustomUserAdmin)

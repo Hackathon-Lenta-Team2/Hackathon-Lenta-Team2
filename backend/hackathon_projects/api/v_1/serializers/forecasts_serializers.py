@@ -8,21 +8,23 @@ class ForecastDataSerializer(ModelSerializer):
 
     class Meta:
         model = ForecastData
-        fields = ['data']
+        fields = ["data"]
 
 
 class ForecastSerializer(ModelSerializer):
     """Сериализатор для модели Forecast."""
 
     forecast_data = ForecastDataSerializer(
-        many=True, read_only=True, source='forecastdata_set')
+        many=True, read_only=True, source="forecastdata_set"
+    )
 
     class Meta:
         model = Forecast
-        fields = ['store', 'sku', 'forecast_date', 'forecast_data']
+        fields = ["store", "sku", "forecast_date", "forecast_data"]
 
     def get_forecast_data(self, forecast):
         forecast_data = ForecastData.objects.filter(forecast_id=forecast)
         forecast_data_serializer = ForecastDataSerializer(
-            forecast_data, many=True)
+            forecast_data, many=True
+        )
         return forecast_data_serializer.data
