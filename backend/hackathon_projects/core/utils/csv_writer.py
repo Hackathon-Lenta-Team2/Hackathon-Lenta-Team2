@@ -100,5 +100,5 @@ class CSVWriter:
     def __write_csv_file(self) -> None:
         """Пишет rows_to_write в CSV файл."""
         lines = pd.DataFrame(self.__rows_to_write)
-        # "-" где нет данных
+        # "Nan" где нет данных
         lines.to_csv(self.__file_name, index=False, na_rep="Nan")
