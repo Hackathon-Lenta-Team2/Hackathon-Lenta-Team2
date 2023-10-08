@@ -3,10 +3,8 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.viewsets import ModelViewSet
 
 from api.v_1.mixins import ListObjectsMixin
-from api.v_1.serializers.sales_serializers import (
-    FactSalesFileSerializer,
-    SaleSerializer,
-)
+from api.v_1.serializers.sales_serializers import (FactSalesFileSerializer,
+                                                   SaleSerializer)
 from sales.models import FactSalesFile, Sale, SaleInfo
 
 

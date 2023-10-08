@@ -3,6 +3,7 @@ import io
 import pandas as pd
 import xlsxwriter
 from django.http import HttpResponse
+
 from forecasts.models import ForecastData
 
 
@@ -69,5 +70,29 @@ def _make_excel_file(data):
     response = HttpResponse(
         output.getvalue(), content_type='application/ms-excel')
     response['Content-Disposition'] = 'attachment; filename="output.xlsx"'
+
+    return response
+
+
+def export_to_exc_for_dates_filters(filtered_data):
+    """Функция записи отфильтрованных по дате данных в excel."""
+
+    data = {
+        'Store ID': [],
+        'SKU ID': [],
+        'Forecast Date': []
+    }
+
+    for item in filtered_data:
+        data['Store ID'].append(item['store'])
+        data['SKU ID'].append(item['sku'])
+        data['Forecast Date'].append(item['forecast_date'])
+
+        for date, value in item['forecast_data'][0]['data'].items():
+            if date not in data:
+                data[date] = []
+            data[date].append(value)
+
+    response = _make_excel_file(data)
 
     return response

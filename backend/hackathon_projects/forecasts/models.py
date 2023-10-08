@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import JSONField
 
 from products.models import StockKeepingUnit
 from stores.models import Store
@@ -44,9 +45,10 @@ class ForecastData(models.Model):
         verbose_name='ID прогноза',
         help_text='ID прогноза',
     )
-    data = models.JSONField(default=dict)
+    data = JSONField(default=dict)
 
     class Meta:
+        db_table = 'forecastdata'
         verbose_name = "Данные прогноза"
         verbose_name_plural = "Данные прогнозов"
         ordering = ("id",)
