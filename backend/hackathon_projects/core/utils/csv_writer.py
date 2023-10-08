@@ -1,11 +1,12 @@
+import itertools
 from datetime import date, datetime, timedelta  # noqa
 
 import pandas as pd
 from django.conf import settings
-from django.db.models import QuerySet
+from django.db.models import QuerySet, Sum
 from typing_extensions import Any
 
-from sales.models import Sale, SaleInfo
+from sales.models import Sale
 
 
 class CSVWriter:
@@ -23,28 +24,26 @@ class CSVWriter:
         self.__file_name = settings.DATA_FILES_DIR / "ds_data.csv"
         self.__rows_to_write = []
         self.__date_now = self.RESEARCH_DAY
-        self.__date_21_before = self.__get_date_some_range_before(21)
 
     def write(self):
         """Выгрузить данные продаж из БД в файл."""
         self.__populate_rows_to_write_with_db_data()
         self.__write_csv_file()
 
-    def __get_date_some_range_before(self, days_range: int) -> date:
-        """Возвращает дату с переданным смещением назад в днях."""
-        return self.__date_now - timedelta(days=days_range)
-
+    @staticmethod
     def __get_sales_in_days_dict(
-        self, sale_info: QuerySet[SaleInfo]
-    ) -> dict[str, float]:
-        """Возвращает словарь данных Дата: Количество продаж."""
+        sale_info: QuerySet[dict[str, Any]]
+    ) -> dict[str, float | None]:
+        """Возвращает словарь данных lag_N: Количество продаж."""
 
-        sales_in_dates = {
-            str(self.__get_date_some_range_before(x)): 0.0
-            for x in range(21, 0, -1)
-        }
-        for sale in sale_info:
-            sales_in_dates[str(sale.date)] += float(sale.sales_units)
+        sales_in_dates = [str(f"lag_{x}") for x in range(22)]
+        values = [float(entry["sum_sales_units"]) for entry in sale_info]
+        # values м.б. короче чем sales_in_dates
+        # заполнит недостающие значения lags - None
+        combs = [
+            comb for comb in itertools.zip_longest(sales_in_dates, values)
+        ]
+        sales_in_dates = {k: v for k, v in combs}
 
         return sales_in_dates
 
@@ -67,29 +66,39 @@ class CSVWriter:
             "st_type_size_id": sale.store_id.size_id,
         }
 
-    def __get_sale_info(self, sale: Sale) -> QuerySet[SaleInfo | None]:
+    @staticmethod
+    def __get_sale_info(sale: Sale) -> QuerySet[dict[str, Any]]:
         """
         Возвращает отфильтрованные данные таблицы SaleInfo.
-        Фильтрует данные, относящиеся к одной продаже,
-        в диапазоне последних 21 дней.
+        Группирует продажи по дате.
+        Суммирует количество продаж в один день.
         """
 
-        return sale.sale_info.filter(
-            date__lt=self.__date_now, date__gte=self.__date_21_before
-        ).order_by("date")
+        return (
+            sale.sale_info.values("date")
+            .annotate(sum_sales_units=Sum("sales_units"))
+            .order_by("-date")[:22]
+        )
+
+    @staticmethod
+    def __get_sales() -> QuerySet[Sale]:
+        """Возвращает данные таблицы Sale."""
+        return Sale.objects.all().select_related("store_id", "sku_id")
 
     def __populate_rows_to_write_with_db_data(self) -> None:
         """Добавляет в rows_to_write отдельные записи с данными."""
-        sales = Sale.objects.all()
+        sales = self.__get_sales()
         for sale in sales:
             sale_info = self.__get_sale_info(sale)
             if sale_info:
                 sales_in_days = self.__get_sales_in_days_dict(sale_info)
                 row = self.__get_row_base_info(sale)
+                # добавить записи lag_0 - lag_21
                 row.update(sales_in_days)
                 self.__rows_to_write.append(row)
 
     def __write_csv_file(self) -> None:
         """Пишет rows_to_write в CSV файл."""
         lines = pd.DataFrame(self.__rows_to_write)
-        lines.to_csv(self.__file_name, index=False)
+        # "-" где нет данных
+        lines.to_csv(self.__file_name, index=False, na_rep="Nan")

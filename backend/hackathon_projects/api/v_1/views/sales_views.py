@@ -13,16 +13,16 @@ class SalesViewSet(ListObjectsMixin):
 
     serializer_class = SaleSerializer
 
-    def get_query_params(self) -> tuple[str | None, ...]:
-        store_id = self.request.query_params.get("store")
-        sku_id = self.request.query_params.get("sku")
+    def get_query_params(self) -> tuple[list | None, list | None, str, str]:
+        stores = self.request.query_params.getlist("store")
+        products = self.request.query_params.getlist("sku")
         date_after = self.request.query_params.get("date_after")
         date_before = self.request.query_params.get("date_before")
-        return store_id, sku_id, date_after, date_before
+        return stores, products, date_after, date_before
 
     def get_queryset(self):
-        store_id, sku_id, date_after, date_before = self.get_query_params()
-        if not all((store_id, sku_id)):
+        stores, products, date_after, date_before = self.get_query_params()
+        if not all((stores, products)):
             raise ValidationError(
                 detail={
                     "detail": (
@@ -31,7 +31,8 @@ class SalesViewSet(ListObjectsMixin):
                     ),
                 }
             )
-        sales = Sale.objects.filter(store_id=store_id, sku_id=sku_id)
+
+        sales = Sale.objects.filter(store_id__in=stores, sku_id__in=products)
 
         if all((date_after, date_before)):
             return sales.prefetch_related(

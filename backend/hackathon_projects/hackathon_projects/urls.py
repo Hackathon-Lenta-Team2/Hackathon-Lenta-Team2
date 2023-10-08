@@ -2,8 +2,10 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
-
-from core.doc_schema import schema_view
+from drf_spectacular.views import (
+    SpectacularAPIView,
+    SpectacularRedocView,
+)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -13,15 +15,9 @@ urlpatterns = [
 
 urlpatterns += [
     path(
-        "swagger/",
-        schema_view.with_ui("swagger", cache_timeout=0),
-        name="schema-swagger-ui",
+        "docs-auto/schema/", SpectacularAPIView.as_view(), name="schema"
     ),
-    path(
-        "redoc/",
-        schema_view.with_ui("redoc", cache_timeout=0),
-        name="schema-redoc",
-    ),
+    path("docs-auto/", SpectacularRedocView.as_view(), name="docs"),
 ]
 
 if settings.DEBUG:
