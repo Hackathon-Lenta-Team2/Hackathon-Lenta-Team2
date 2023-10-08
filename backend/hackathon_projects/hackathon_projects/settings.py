@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "rest_framework.authtoken",
+    "corsheaders",
     "drf_spectacular",
     "django_filters",
     "djoser",
@@ -44,6 +45,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -148,24 +150,22 @@ DJOSER = {
     "LOGIN_FIELD": "email",
 }
 
-# LOGGING = {
-#     "version": 1,
-#     "disable_existing_loggers": False,
-#     "handlers": {
-#         "console": {
-#             "class": "logging.StreamHandler",
-#         },
-#     },
-#     "loggers": {
-#         "django.db.backends": {
-#             "handlers": ["console"],
-#             "level": "DEBUG",
-#         },
-#     },
-# }
-
 DATA_FILES_DIR = BASE_DIR / "data"
 
-CELERY_BROKER_URL = os.getenv(
+# CORS
+CORS_ORIGIN_ALLOW_ALL = True
+# включить на проде
+# CORS_ALLOWED_ORIGINS = [
+#     'http://localhost:3000',
+# ]
+
+# .env
+CELERY_BROKER_URL: str = os.getenv(
     "CELERY_BROKER_URL", default="redis://localhost:6379/0"
+)
+DS_START_FORECAST_URL: str = os.getenv(
+    "DS_START_FORECAST_URL", default="http://ds:7000/ds-service/start/"
+)
+RUN_DS_DATA_PREPARATION_CRON_HOUR: str = os.getenv(
+    "RUN_DS_DATA_PREPARATION_CRON_HOUR", default="04"
 )
