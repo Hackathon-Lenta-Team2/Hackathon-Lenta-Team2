@@ -32,7 +32,8 @@ class Migration(migrations.Migration):
                     models.FileField(
                         help_text="файл в формате .csv",
                         upload_to=pathlib.PureWindowsPath(
-                            "C:/C_DEV/1_All_together_build/Hackathon-Lenta-Team2/backend/hackathon_projects/data"
+                            "C:/C_DEV/1_All_together_build/Hackathon-Lenta"
+                            "-Team2/backend/hackathon_projects/data"
                         ),
                         verbose_name="Файл для импорта",
                     ),
@@ -94,14 +95,20 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 ("date", models.DateField(verbose_name="Дата продажи")),
-                ("sales_type", models.BooleanField(verbose_name="Флаг наличия промо")),
+                (
+                    "sales_type",
+                    models.BooleanField(verbose_name="Флаг наличия промо"),
+                ),
                 (
                     "sales_units",
                     models.DecimalField(
                         decimal_places=1,
                         max_digits=15,
-                        validators=[django.core.validators.MinValueValidator(0)],
-                        verbose_name="Число проданных товаров без признака промо",
+                        validators=[
+                            django.core.validators.MinValueValidator(0)
+                        ],
+                        verbose_name="Число проданных товаров без признака "
+                        "промо",
                     ),
                 ),
                 (
@@ -109,8 +116,11 @@ class Migration(migrations.Migration):
                     models.DecimalField(
                         decimal_places=1,
                         max_digits=15,
-                        validators=[django.core.validators.MinValueValidator(0)],
-                        verbose_name="Число проданных товаров с признаком промо",
+                        validators=[
+                            django.core.validators.MinValueValidator(0)
+                        ],
+                        verbose_name="Число проданных товаров с признаком "
+                        "промо",
                     ),
                 ),
                 (
@@ -118,7 +128,9 @@ class Migration(migrations.Migration):
                     models.DecimalField(
                         decimal_places=1,
                         max_digits=15,
-                        validators=[django.core.validators.MinValueValidator(0)],
+                        validators=[
+                            django.core.validators.MinValueValidator(0)
+                        ],
                         verbose_name="Продажи без признака промо в рублях",
                     ),
                 ),
@@ -127,7 +139,9 @@ class Migration(migrations.Migration):
                     models.DecimalField(
                         decimal_places=1,
                         max_digits=15,
-                        validators=[django.core.validators.MinValueValidator(0)],
+                        validators=[
+                            django.core.validators.MinValueValidator(0)
+                        ],
                         verbose_name="Продажи с признаком промо в рублях",
                     ),
                 ),

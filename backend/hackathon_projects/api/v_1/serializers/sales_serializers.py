@@ -37,6 +37,7 @@ class SaleSerializer(ModelSerializer):
 
 class FactSalesFileSerializer(ModelSerializer):
     """Сериализатор для модели FactSalesFile."""
+
     class Meta:
         model = FactSalesFile
         fields = "__all__"

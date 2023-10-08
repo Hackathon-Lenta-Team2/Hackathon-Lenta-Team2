@@ -4,9 +4,12 @@ import secrets
 from django.db.models.deletion import RestrictedError
 from django.test import TestCase
 
-from core.model_factories.sku_factory import (CategoryFactory, GroupFactory,
-                                              StockKeepingUnitFactory,
-                                              SubCategoryFactory, UOMFactory)
+from core.model_factories.sku_factory import (
+    CategoryFactory,
+    GroupFactory,
+    SubCategoryFactory,
+    UOMFactory,
+)
 
 from .models import UOM, Category, Group, StockKeepingUnit, Subcategory
 
@@ -31,7 +34,7 @@ class GroupModelTest(TestCase):
         self.assertEqual(self.group.id, self.id)
 
     def test_object_name_is_correct(self):
-        object_name = f'Group: id={self.id}'
+        object_name = f"Group: id={self.id}"
         self.assertEqual(object_name, str(self.group))
 
 
@@ -46,8 +49,7 @@ class CategoryModelTest(TestCase):
         cls.group = Group.objects.create(id=cls.group_id)
 
         cls.id = secrets.token_hex(16)
-        cls.category = Category.objects.create(
-            id=cls.id, group_id=cls.group)
+        cls.category = Category.objects.create(id=cls.id, group_id=cls.group)
 
     def test_object_was_created(self):
         self.assertEquals(Category.objects.count(), 1)
@@ -59,7 +61,7 @@ class CategoryModelTest(TestCase):
         self.assertEqual(self.category.id, self.id)
 
     def test_object_name_is_correct(self):
-        object_name = f'Category: id={self.id}'
+        object_name = f"Category: id={self.id}"
         self.assertEqual(object_name, str(self.category))
 
 
@@ -75,11 +77,13 @@ class SubcategoryModelTest(TestCase):
 
         cls.category_id = secrets.token_hex(16)
         cls.category = Category.objects.create(
-            id=cls.category_id, group_id=cls.group)
+            id=cls.category_id, group_id=cls.group
+        )
 
         cls.id = secrets.token_hex(16)
         cls.subcategory = Subcategory.objects.create(
-            id=cls.id, category_id=cls.category)
+            id=cls.id, category_id=cls.category
+        )
 
     def test_id_field_has_correct_type(self):
         self.assertIsInstance(self.subcategory.id, str)
@@ -88,7 +92,7 @@ class SubcategoryModelTest(TestCase):
         self.assertEqual(self.subcategory.id, self.id)
 
     def test_object_name_is_correct(self):
-        object_name = f'Subcategory: id={self.id}'
+        object_name = f"Subcategory: id={self.id}"
         self.assertEqual(object_name, str(self.subcategory))
 
 
@@ -98,7 +102,7 @@ class UOMModelTest(TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         super().setUpClass()
-        cls.title = 'А' * 150
+        cls.title = "А" * 150
         cls.id = random.randint(1, 100)
         cls.uom = UOM.objects.create(id=cls.id, title=cls.title)
 
@@ -109,7 +113,7 @@ class UOMModelTest(TestCase):
         self.assertEqual(self.uom.id, self.id)
 
     def test_object_name_is_correct(self):
-        object_name = f'UOM: id={self.id}, title={self.title}'
+        object_name = f"UOM: id={self.id}, title={self.title}"
         self.assertEqual(object_name, str(self.uom))
 
 
@@ -146,33 +150,23 @@ class StockKeepingUnitTest(TestCase):
         self.assertEqual(object_name, str(self.sku))
 
     def test_relations_work_correctly(self):
-        for model in (
-            self.group,
-            self.category,
-            self.subcategory,
-            self.uom
-        ):
+        for model in (self.group, self.category, self.subcategory, self.uom):
             with self.subTest(model=model):
                 self.assertEqual(model.products.count(), 1)
                 self.assertEqual(model.products.first(), self.sku)
 
     def test_deleting_work_correctly(self):
-        for model in (
-            self.group,
-            self.category,
-            self.subcategory,
-            self.uom
-        ):
+        for model in (self.group, self.category, self.subcategory, self.uom):
             with self.subTest(model=model):
                 self.assertRaises(RestrictedError, model.delete)
 
     def test_correctly_verbose_name(self):
         field_verbose_name = {
-            'title': 'Наименование',
-            'group_id': 'Группа товара',
-            'cat_id': 'Категория товара',
-            'subcat_id': 'Подкатегория товара',
-            'uom_id': 'Вес/шт'
+            "title": "Наименование",
+            "group_id": "Группа товара",
+            "cat_id": "Категория товара",
+            "subcat_id": "Подкатегория товара",
+            "uom_id": "Вес/шт",
         }
         for fields, verbose_name in field_verbose_name.items():
             with self.subTest(fields=fields):

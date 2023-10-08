@@ -1,10 +1,12 @@
 from rest_framework.filters import SearchFilter
 
 from api.v_1.mixins import ListObjectsMixin
-from api.v_1.serializers.stores_serializers import (CitySerializer,
-                                                    DivisionSerializer,
-                                                    FormatSerializer,
-                                                    StoreSerializer)
+from api.v_1.serializers.stores_serializers import (
+    CitySerializer,
+    DivisionSerializer,
+    FormatSerializer,
+    StoreSerializer,
+)
 from stores.models import City, Division, Format, Store
 
 

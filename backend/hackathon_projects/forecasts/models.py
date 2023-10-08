@@ -11,20 +11,20 @@ class Forecast(models.Model):
     store = models.ForeignKey(
         Store,
         on_delete=models.RESTRICT,
-        verbose_name='Супермаркет',
-        related_name='forecasts',
-        help_text='Супермаркет',
+        verbose_name="Супермаркет",
+        related_name="forecasts",
+        help_text="Супермаркет",
     )
     sku = models.ForeignKey(
         StockKeepingUnit,
         on_delete=models.RESTRICT,
-        verbose_name='Товар',
-        related_name='forecasts',
-        help_text='Товар',
+        verbose_name="Товар",
+        related_name="forecasts",
+        help_text="Товар",
     )
     forecast_date = models.DateField(
-        verbose_name='Дата',
-        help_text='Дата',
+        verbose_name="Дата",
+        help_text="Дата",
     )
 
     class Meta:
@@ -42,8 +42,8 @@ class ForecastData(models.Model):
     forecast_id = models.ForeignKey(
         Forecast,
         on_delete=models.RESTRICT,
-        verbose_name='ID прогноза',
-        help_text='ID прогноза',
+        verbose_name="ID прогноза",
+        help_text="ID прогноза",
     )
     data = JSONField(default=dict)
 

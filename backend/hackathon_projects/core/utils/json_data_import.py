@@ -13,7 +13,7 @@ def import_data_from_json(json_obj):
     try:
         if isinstance(json_obj, str):
             file_path = os.path.join(settings.DATA_FILES_DIR, json_obj)
-            with open(file_path, 'r') as json_file:
+            with open(file_path, "r") as json_file:
                 data = json.load(json_file)
         elif isinstance(json_obj, list):  # Проверяем, что это список
             data = json_obj
@@ -28,34 +28,34 @@ def import_data_from_json(json_obj):
     with transaction.atomic():
         for item in data:  # Теперь data - это список, не словарь
             try:
-                store_id = item.get('store')
-                sku_id = item['forecast']['sku']
-                forecast_date = item['forecast_date']
-                forecast_data = item['forecast']['sales_units']
+                store_id = item.get("store")
+                sku_id = item["forecast"]["sku"]
+                forecast_date = item["forecast_date"]
+                forecast_data = item["forecast"]["sales_units"]
             except KeyError as e:
                 raise ValueError(
-                    "Отсутствует обязательное поле в JSON: {}".format(str(e)))
+                    "Отсутствует обязательное поле в JSON: {}".format(str(e))
+                )
 
             forecast = Forecast(
-                store_id=store_id,
-                sku_id=sku_id,
-                forecast_date=forecast_date
+                store_id=store_id, sku_id=sku_id, forecast_date=forecast_date
             )
             forecasts_to_insert.append(forecast)
 
             forecast_data_object = ForecastData(
-                forecast_id=forecast,
-                data=forecast_data
+                forecast_id=forecast, data=forecast_data
             )
             forecast_data_to_insert.append(forecast_data_object)
 
         Forecast.objects.bulk_create(forecasts_to_insert)
 
         forecast_id_mapping = {
-            forecast: forecast.id for forecast in forecasts_to_insert}
+            forecast: forecast.id for forecast in forecasts_to_insert
+        }
 
         for forecast_data_object in forecast_data_to_insert:
             forecast_data_object.forecast_id_id = forecast_id_mapping[
-                forecast_data_object.forecast_id]
+                forecast_data_object.forecast_id
+            ]
 
         ForecastData.objects.bulk_create(forecast_data_to_insert)

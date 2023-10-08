@@ -4,9 +4,12 @@ from rest_framework import status
 from rest_framework.response import Response
 
 from api.tests.test_utils import BaseUserTest
-from core.model_factories.sku_factory import (CategoryFactory, GroupFactory,
-                                              StockKeepingUnitFactory,
-                                              SubCategoryFactory)
+from core.model_factories.sku_factory import (
+    CategoryFactory,
+    GroupFactory,
+    StockKeepingUnitFactory,
+    SubCategoryFactory,
+)
 from core.model_factories.store_factory import CityFactory, StoreFactory
 
 User = get_user_model()
@@ -92,12 +95,10 @@ class StockKeepingUnitViewsTest(BaseUserTest):
 
     def test_filter_works_correctly(self):
         subcat = SubCategoryFactory(id="123123123sad")
-        store_1 = StockKeepingUnitFactory(subcat_id=subcat)
+        StockKeepingUnitFactory(subcat_id=subcat)
         filter_params = {"subcat_id": subcat.id}
         response = self.client.get(
-            reverse("api:products-list"),
-            data=filter_params,
-            format='json'
+            reverse("api:products-list"), data=filter_params, format="json"
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)
@@ -138,9 +139,7 @@ class CategoryViewsTest(BaseUserTest):
         super().setUpClass()
 
         cls.category = CategoryFactory()
-        cls.urls = [
-            reverse("api:categories-list")
-        ]
+        cls.urls = [reverse("api:categories-list")]
 
     def setUp(self) -> None:
         self.user_authorization()
@@ -158,12 +157,10 @@ class CategoryViewsTest(BaseUserTest):
 
     def test_filter_works_correctly(self):
         group = GroupFactory()
-        category = CategoryFactory(group_id=group)
+        CategoryFactory(group_id=group)
         filter_params = {"group_id": group.id}
         response = self.client.get(
-            reverse("api:categories-list"),
-            data=filter_params,
-            format='json'
+            reverse("api:categories-list"), data=filter_params, format="json"
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)
@@ -178,9 +175,7 @@ class SubcategoryViewsTest(BaseUserTest):
         super().setUpClass()
 
         cls.subcategory = SubCategoryFactory()
-        cls.urls = [
-            reverse("api:subcategories-list")
-        ]
+        cls.urls = [reverse("api:subcategories-list")]
 
     def setUp(self) -> None:
         self.user_authorization()
@@ -198,12 +193,12 @@ class SubcategoryViewsTest(BaseUserTest):
 
     def test_filter_works_correctly(self):
         category = CategoryFactory()
-        subcategory = SubCategoryFactory(category_id=category)
+        SubCategoryFactory(category_id=category)
         filter_params = {"category_id": category.id}
         response = self.client.get(
             reverse("api:subcategories-list"),
             data=filter_params,
-            format='json'
+            format="json",
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)

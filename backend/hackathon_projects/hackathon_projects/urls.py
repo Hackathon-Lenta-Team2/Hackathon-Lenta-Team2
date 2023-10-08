@@ -14,9 +14,7 @@ urlpatterns = [
 ]
 
 urlpatterns += [
-    path(
-        "docs-auto/schema/", SpectacularAPIView.as_view(), name="schema"
-    ),
+    path("docs-auto/schema/", SpectacularAPIView.as_view(), name="schema"),
     path("docs-auto/", SpectacularRedocView.as_view(), name="docs"),
 ]
 

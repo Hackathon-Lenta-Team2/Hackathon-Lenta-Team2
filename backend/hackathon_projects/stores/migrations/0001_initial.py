@@ -27,7 +27,9 @@ class Migration(migrations.Migration):
                 (
                     "title",
                     models.CharField(
-                        blank=True, max_length=150, verbose_name="Название города"
+                        blank=True,
+                        max_length=150,
+                        verbose_name="Название города",
                     ),
                 ),
             ],
@@ -128,7 +130,12 @@ class Migration(migrations.Migration):
                         verbose_name="ID",
                     ),
                 ),
-                ("type", models.CharField(max_length=150, verbose_name="Тип размера")),
+                (
+                    "type",
+                    models.CharField(
+                        max_length=150, verbose_name="Тип размера"
+                    ),
+                ),
             ],
             options={
                 "verbose_name": "Размер супермаркетов",
@@ -153,7 +160,9 @@ class Migration(migrations.Migration):
                 (
                     "title",
                     models.CharField(
-                        blank=True, max_length=150, verbose_name="Название супермаркета"
+                        blank=True,
+                        max_length=150,
+                        verbose_name="Название супермаркета",
                     ),
                 ),
                 (
