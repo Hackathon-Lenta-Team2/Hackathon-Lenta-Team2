@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from loguru import logger
 from django.http import JsonResponse
 from rest_framework import status
 from rest_framework.response import Response
@@ -8,9 +9,9 @@ from rest_framework.views import APIView
 from api.v_1.mixins import ListObjectsMixin
 from api.v_1.serializers.forecasts_serializers import ForecastSerializer
 from core.utils.date_filters import filter_forecast_data
-from core.utils.excel_writer import (export_to_exc_for_dates_filters,
-                                     export_to_excel)
-from core.utils.json_data_import import import_data_from_json
+from core.utils.excel_writer import export_to_exc_for_dates_filters
+from core.services.tasks import ds_data_import_task
+from core.utils.excel_writer import ExelExport
 from forecasts.models import Forecast
 
 
@@ -30,6 +31,8 @@ class ForecastViewSet(ListObjectsMixin):
 
         queryset = Forecast.objects.all()
 
+        queryset = Forecast.objects.all()
+
         if store_id:
             queryset = queryset.filter(store__in=store_id)
 
@@ -46,7 +49,7 @@ class ForecastViewSet(ListObjectsMixin):
                 filtered_data = filter_forecast_data(
                     request, queryset=filtered_queryset)
                 return export_to_exc_for_dates_filters(filtered_data)
-            return export_to_excel(filtered_queryset)
+            return ExelExport(queryset, is_forecast=True).export()
         if start_date_param and end_date_param:
             filtered_data = filter_forecast_data(
                 request, queryset=filtered_queryset)
@@ -61,14 +64,15 @@ class ImportDataView(APIView):
 
     def get(self, request):
         try:
-            import_data_from_json("forecast_archive.json")
+            logger.info("Бэк получил сигнал от DS о готовности данных.")
+            ds_data_import_task.delay()
             return Response(
-                {'message': 'Данные успешно импортированы'},
-                status=status.HTTP_200_OK
+                {"message": "Операция импорта данных началась."},
+                status=status.HTTP_200_OK,
             )
         except Exception as err:
             error_message = f"Unexpected {err=}"
+            logger.error(error_message)
             return Response(
-                {'error': error_message},
-                status=status.HTTP_400_BAD_REQUEST
+                {"error": error_message}, status=status.HTTP_400_BAD_REQUEST
             )
