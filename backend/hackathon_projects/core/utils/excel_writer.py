@@ -93,8 +93,6 @@ class ExelExport:
             for date in sales_units_data.keys():
                 data[date].append(sales_units.get(date, None))
 
-        return data
-
     def _make_excel_file_response(self, data: Any) -> HttpResponse:
         """Создаёт HttpResponse с файлом excel."""
 
@@ -108,3 +106,33 @@ class ExelExport:
         response["Content-Disposition"] = 'attachment; filename="output.xlsx"'
 
         return response
+
+
+def export_to_exc_for_dates_filters(filtered_data):
+    """Функция записи отфильтрованных по дате данных в excel."""
+
+    data = {
+        'Store ID': [],
+        'SKU ID': [],
+        'Forecast Date': []
+    }
+
+    for item in filtered_data:
+        data['Store ID'].append(item['store'])
+        data['SKU ID'].append(item['sku'])
+        data['Forecast Date'].append(item['forecast_date'])
+
+        for date, value in item['forecast_data'][0]['data'].items():
+            if date not in data:
+                data[date] = []
+            data[date].append(value)
+
+    df = pd.DataFrame(data)
+    output = io.BytesIO()
+    with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+        df.to_excel(writer, sheet_name='Sheet1', index=False)
+    response = HttpResponse(
+        output.getvalue(), content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename="output.xlsx"'
+
+    return response

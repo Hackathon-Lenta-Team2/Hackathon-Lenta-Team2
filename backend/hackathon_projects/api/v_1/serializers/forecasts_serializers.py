@@ -22,9 +22,8 @@ class ForecastSerializer(ModelSerializer):
         model = Forecast
         fields = ["store", "sku", "forecast_date", "forecast_data"]
 
-    def get_forecast_data(self, forecast):
-        forecast_data = ForecastData.objects.filter(forecast_id=forecast)
-        forecast_data_serializer = ForecastDataSerializer(
-            forecast_data, many=True
-        )
-        return forecast_data_serializer.data
+    # def get_forecast_data(self, obj):
+    #     forecast_data_date = self.context.get('forecast_data_date')
+    #     filtered_data = {date: value for date, value in obj.forecast_data.data.items(
+    #     ) if date == forecast_data_date}
+    #     return [{'data': filtered_data}]

@@ -47,6 +47,7 @@ class ForecastData(models.Model):
     data = models.JSONField(default=dict)
 
     class Meta:
+        db_table = 'forecastdata'
         verbose_name = "Данные прогноза"
         verbose_name_plural = "Данные прогнозов"
         ordering = ("id",)
