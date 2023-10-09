@@ -215,7 +215,7 @@ paths:
       tags:
         - Products
       parameters:
-        - name: subcategory_id
+        - name: subcat_id
           in: query
           description: ID подкатегорий продуктов
           required: false
