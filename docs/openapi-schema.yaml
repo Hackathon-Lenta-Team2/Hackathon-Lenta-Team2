@@ -292,6 +292,31 @@ paths:
   /api/v1/sales/export/:
     get:
       operationId: Экспорт фактических продаж
+      parameters:
+        - name: store
+          in: query
+          description: "список ID супермаркетов"
+          required: true
+          schema:
+            type: string
+        - name: sku
+          in: query
+          description: "список ID продуктов"
+          required: true
+          schema:
+            type: string
+        - name: date_after
+          in: query
+          description: "дата в формате yyyy-mm-dd"
+          required: false
+          schema:
+            type: string
+        - name: date_before
+          in: query
+          required: false
+          description: "дата в формате yyyy-mm-dd"
+          schema:
+            type: string
       description: Экспорт данных фактических продаж в виде Excel файла.
       tags:
         - Sales
