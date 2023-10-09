@@ -1,7 +1,7 @@
 from rest_framework.fields import SerializerMethodField
 from rest_framework.serializers import ModelSerializer
 
-from sales.models import Sale, SaleInfo
+from sales.models import FactSalesFile, Sale, SaleInfo
 
 
 class SaleInfoSerializer(ModelSerializer):
@@ -33,3 +33,11 @@ class SaleSerializer(ModelSerializer):
     class Meta:
         model = Sale
         fields = ("store_id", "sku_id", "fact")
+
+
+class FactSalesFileSerializer(ModelSerializer):
+    """Сериализатор для модели FactSalesFile."""
+
+    class Meta:
+        model = FactSalesFile
+        fields = "__all__"

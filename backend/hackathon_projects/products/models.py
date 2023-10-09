@@ -30,33 +30,42 @@ class StockKeepingUnit(BaseIDModel):
         help_text="Наименование",
     )
     group_id = models.ForeignKey(
-        'Group',
+        "Group",
         on_delete=models.RESTRICT,
         verbose_name="Группа товара",
         related_name="products",
         help_text="ID группы товара",
     )
     cat_id = models.ForeignKey(
-        'Category',
+        "Category",
         on_delete=models.RESTRICT,
         verbose_name="Категория товара",
         related_name="products",
         help_text="ID категории товара",
     )
     subcat_id = models.ForeignKey(
-        'Subcategory',
+        "Subcategory",
         on_delete=models.RESTRICT,
         verbose_name="Подкатегория товара",
         related_name="products",
         help_text="ID подкатегории товара",
     )
     uom_id = models.ForeignKey(
-        'UOM',
+        "UOM",
         on_delete=models.RESTRICT,
         verbose_name="Вес/шт",
         related_name="products",
         help_text="ID маркера товара (вес/шт)",
     )
+
+    def save(self, *args, **kwargs):
+        if not self.title:
+            self.title = self.get_default_store_title(self.id)
+        super().save(*args, **kwargs)
+
+    @staticmethod
+    def get_default_store_title(id: str) -> str:
+        return f"Product {id}"
 
     class Meta:
         verbose_name = "Товар"
@@ -123,6 +132,7 @@ class UOM(models.Model):
     """Модель маркера товара,
     обозначающего продается товар на вес или в шт.
     """
+
     id = models.IntegerField(
         primary_key=True,
         db_index=True,

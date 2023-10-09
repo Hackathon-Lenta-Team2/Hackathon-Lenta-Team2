@@ -11,7 +11,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv("SECRET_KEY", default="amazing_secret_key_12345")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True  # os.getenv("DEBUG", default="False") == "True"
+DEBUG = os.getenv("DEBUG", default="False") == "True"
 
 ALLOWED_HOSTS = ["*"]
 
@@ -26,9 +26,10 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "drf_yasg",
     "rest_framework",
     "rest_framework.authtoken",
+    "corsheaders",
+    "drf_spectacular",
     "django_filters",
     "djoser",
     "users",
@@ -38,11 +39,13 @@ INSTALLED_APPS = [
     "forecasts",
     "core",
     "api",
+    "django_cleanup.apps.CleanupConfig",
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -75,8 +78,10 @@ WSGI_APPLICATION = "hackathon_projects.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": os.getenv("DB_ENGINE", default="django.db.backends.sqlite3"),
-        "NAME": os.getenv("DB_NAME", default=BASE_DIR / "db.sqlite3"),
+        "ENGINE": os.getenv(
+            "DB_ENGINE", default="django.db.backends.postgresql"
+        ),
+        "NAME": os.getenv("DB_NAME", default="hackathon_projects"),
         "USER": os.getenv("POSTGRES_USER", default="postgres"),
         "PASSWORD": os.getenv("POSTGRES_PASSWORD", default="2580"),
         "HOST": os.getenv("DB_HOST", default="localhost"),
@@ -89,16 +94,20 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
+        "NAME": "django.contrib.auth.password_validation"
+        ".UserAttributeSimilarityValidator",
     },
     {
-        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
+        "NAME": "django.contrib.auth.password_validation"
+        ".MinimumLengthValidator",
     },
     {
-        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
+        "NAME": "django.contrib.auth.password_validation"
+        ".CommonPasswordValidator",
     },
     {
-        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
+        "NAME": "django.contrib.auth.password_validation"
+        ".NumericPasswordValidator",
     },
 ]
 
@@ -131,30 +140,36 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework.authentication.TokenAuthentication",
     ],
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Lenta Hackathon API",
+    "DESCRIPTION": "Lenta Hackathon",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
 }
 
 DJOSER = {
     "LOGIN_FIELD": "email",
 }
 
-# LOGGING = {
-#     "version": 1,
-#     "disable_existing_loggers": False,
-#     "handlers": {
-#         "console": {
-#             "class": "logging.StreamHandler",
-#         },
-#     },
-#     "loggers": {
-#         "django.db.backends": {
-#             "handlers": ["console"],
-#             "level": "DEBUG",
-#         },
-#     },
-# }
-
 DATA_FILES_DIR = BASE_DIR / "data"
 
-CELERY_BROKER_URL = os.getenv(
-    "CELERY_BROKER_URL", default="redis://redis:6379/0"
+# CORS
+CORS_ORIGIN_ALLOW_ALL = True
+# включить на проде
+# CORS_ALLOWED_ORIGINS = [
+#     'http://localhost:3000',
+# ]
+
+# .env
+CELERY_BROKER_URL: str = os.getenv(
+    "CELERY_BROKER_URL", default="redis://localhost:6379/0"
+)
+DS_START_FORECAST_URL: str = os.getenv(
+    "DS_START_FORECAST_URL", default="http://ds:7000/ds-service/start/"
+)
+RUN_DS_DATA_PREPARATION_CRON_HOUR: str = os.getenv(
+    "RUN_DS_DATA_PREPARATION_CRON_HOUR", default="04"
 )

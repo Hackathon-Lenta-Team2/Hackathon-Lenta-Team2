@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Sale, SaleInfo
+from .models import FactSalesFile, Sale, SaleInfo
 
 
 class SaleAdmin(admin.ModelAdmin):
@@ -24,7 +24,7 @@ class SaleInfoAdmin(admin.ModelAdmin):
         "sales_rub_promo",
     )
     list_display_links = ("pk", "sale_id", "date")
-    list_filter = ("sale_id", "date")
+    list_filter = ("date",)
     list_editable = (
         "sales_type",
         "sales_units",
@@ -34,5 +34,13 @@ class SaleInfoAdmin(admin.ModelAdmin):
     )
 
 
+class FactSalesFileAdmin(admin.ModelAdmin):
+    """Настройки админ-панели для модели FactSalesFile."""
+
+    list_display = ("pk", "file_path")
+    list_display_links = list_display
+
+
 admin.site.register(Sale, SaleAdmin)
 admin.site.register(SaleInfo, SaleInfoAdmin)
+admin.site.register(FactSalesFile, FactSalesFileAdmin)

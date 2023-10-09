@@ -1,9 +1,15 @@
 from django.db.models import Prefetch
+from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
+from rest_framework.viewsets import ModelViewSet
 
 from api.v_1.mixins import ListObjectsMixin
-from api.v_1.serializers.sales_serializers import SaleSerializer
-from sales.models import Sale, SaleInfo
+from api.v_1.serializers.sales_serializers import (
+    FactSalesFileSerializer,
+    SaleSerializer,
+)
+from core.utils.excel_writer import ExelExport
+from sales.models import FactSalesFile, Sale, SaleInfo
 
 
 class SalesViewSet(ListObjectsMixin):
@@ -11,16 +17,16 @@ class SalesViewSet(ListObjectsMixin):
 
     serializer_class = SaleSerializer
 
-    def get_query_params(self) -> tuple[str | None, ...]:
-        store_id = self.request.query_params.get("store")
-        sku_id = self.request.query_params.get("sku")
+    def get_query_params(self) -> tuple[list | None, list | None, str, str]:
+        stores = self.request.query_params.getlist("store")
+        products = self.request.query_params.getlist("sku")
         date_after = self.request.query_params.get("date_after")
         date_before = self.request.query_params.get("date_before")
-        return store_id, sku_id, date_after, date_before
+        return stores, products, date_after, date_before
 
     def get_queryset(self):
-        store_id, sku_id, date_after, date_before = self.get_query_params()
-        if not all((store_id, sku_id)):
+        stores, products, date_after, date_before = self.get_query_params()
+        if not all((stores, products)):
             raise ValidationError(
                 detail={
                     "detail": (
@@ -29,7 +35,8 @@ class SalesViewSet(ListObjectsMixin):
                     ),
                 }
             )
-        sales = Sale.objects.filter(store_id=store_id, sku_id=sku_id)
+
+        sales = Sale.objects.filter(store_id__in=stores, sku_id__in=products)
 
         if all((date_after, date_before)):
             return sales.prefetch_related(
@@ -55,3 +62,17 @@ class SalesViewSet(ListObjectsMixin):
                 )
             )
         return sales.prefetch_related("sale_info")
+
+    @action(url_path="export", detail=False, methods=["get"])
+    def export_excel(self, request):
+        queryset = self.get_queryset()
+        response = ExelExport(queryset, is_forecast=False).export()
+        return response
+
+
+class FactSalesImportViewSet(ModelViewSet):
+    """Класс представления для загрузки файла фактических продаж."""
+
+    queryset = FactSalesFile.objects.all()
+    serializer_class = FactSalesFileSerializer
+    http_method_names = ("post",)

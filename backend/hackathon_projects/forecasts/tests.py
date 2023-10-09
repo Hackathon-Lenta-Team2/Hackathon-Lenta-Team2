@@ -1,4 +1,3 @@
-import datetime
 from datetime import datetime
 
 from django.db.models.deletion import RestrictedError
@@ -24,9 +23,7 @@ class ForecastModelTest(TestCase):
         times = datetime.now().strftime("%Y-%m-%d")
         cls.forecast_date = times
         cls.forecast = Forecast.objects.create(
-            store=cls.store,
-            sku=cls.sku,
-            forecast_date=cls.forecast_date
+            store=cls.store, sku=cls.sku, forecast_date=cls.forecast_date
         )
 
     def test_object_was_created(self):
@@ -38,9 +35,9 @@ class ForecastModelTest(TestCase):
 
     def test_correctly_verbose_name(self):
         field_verbose_name = {
-            'store': 'Супермаркет',
-            'sku': 'Товар',
-            'forecast_date': 'Дата'
+            "store": "Супермаркет",
+            "sku": "Товар",
+            "forecast_date": "Дата",
         }
         for fields, verbose_name in field_verbose_name.items():
             with self.subTest(fields=fields):
@@ -66,24 +63,17 @@ class ForecastDataModelTest(TestCase):
         super().setUpClass()
 
         cls.forecast: Forecast = ForecastFactory()
-        data_json = {
-            "name": "John",
-            "age": 30,
-            "city": "New York"
-        }
+        data_json = {"name": "John", "age": 30, "city": "New York"}
         cls.data = data_json
         cls.forecast_date = ForecastData.objects.create(
-            forecast_id=cls.forecast,
-            data=cls.data
+            forecast_id=cls.forecast, data=cls.data
         )
 
     def test_object_was_created(self):
         self.assertEquals(ForecastData.objects.count(), 1)
 
     def test_correctly_verbose_name(self):
-        field_verbose_name = {
-            'forecast_id': 'ID прогноза'
-        }
+        field_verbose_name = {"forecast_id": "ID прогноза"}
         for fields, verbose_name in field_verbose_name.items():
             with self.subTest(fields=fields):
                 self.assertEquals(
@@ -92,8 +82,6 @@ class ForecastDataModelTest(TestCase):
                 )
 
     def test_deleting_work_correctly(self):
-        for model in (
-            self.forecast,
-        ):
+        for model in (self.forecast,):
             with self.subTest(model=model):
                 self.assertRaises(RestrictedError, model.delete)

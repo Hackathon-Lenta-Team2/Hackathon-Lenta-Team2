@@ -1,5 +1,8 @@
+from django.conf import settings
 from django.core.validators import MinValueValidator
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 from products.models import StockKeepingUnit
 from stores.models import Store
@@ -26,6 +29,12 @@ class Sale(models.Model):
         verbose_name = "Продажа"
         verbose_name_plural = "Продажи"
         ordering = ("id",)
+        constraints = [
+            models.UniqueConstraint(
+                name="unique_store_and_sku",
+                fields=["store_id", "sku_id"],
+            )
+        ]
 
     def __str__(self) -> str:
         return (
@@ -79,3 +88,32 @@ class SaleInfo(models.Model):
         return (
             f"SaleInfo: id={self.id}, sale_id={self.sale_id}, date={self.date}"
         )
+
+
+class FactSalesFile(models.Model):
+    """Модель файла импорта данных о фактических продажах."""
+
+    file_path = models.FileField(
+        verbose_name="Файл для импорта",
+        upload_to=settings.DATA_FILES_DIR,
+        help_text="файл в формате .csv",
+    )
+
+    class Meta:
+        verbose_name = verbose_name_plural = "Импорт фактических продаж"
+        ordering = ("id",)
+
+    def __str__(self) -> str:
+        return f"FactSalesFile: file_path={self.file_path}"
+
+
+@receiver(post_save, sender=FactSalesFile)
+def start_import(sender, instance, created, **kwargs) -> None:
+    """Запускает импорт из файла в БД при получении файла."""
+    if created:
+        from core.utils.json_fact_sales_import import FactSalesImportFromCSV
+
+        FactSalesImportFromCSV(instance).import_data()
+
+
+post_save.connect(start_import, sender=FactSalesFile)

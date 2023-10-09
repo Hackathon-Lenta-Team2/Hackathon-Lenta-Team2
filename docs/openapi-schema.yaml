@@ -1,0 +1,730 @@
+openapi: 3.0.3
+info:
+  title: Lenta Hackathon API
+  version: 1.0.0
+  description: |-
+    Совместный проект выпускников ЯП для сети гипермаркетов "Лента".
+
+    Целью данного проекта было создание сервиса, способного прогнозировать спрос на товары собственного производства, что позволило бы сети гипермаркетов оптимизировать свои запасы и улучшить предложение товаров для потребителей.
+
+    Для достижения этой цели команда проекта провела глубокий анализ данных, используя различные методы машинного обучения, а также разработала алгоритмы и модели, которые позволили бы с высокой точностью предсказывать спрос на товары.
+
+tags:
+  - name: "Authorization"
+    description: "Авторизация"
+  - name: "Stores"
+    description: "Супермаркеты"
+  - name: "Products"
+    description: "Товары"
+  - name: "Forecasts"
+    description: "Прогнозы продаж"
+  - name: "Sales"
+    description: "Продажи"
+
+paths:
+  /api/v1/categories/:
+    get:
+      operationId: Список категорий
+      description: Получение списка категорий продуктов с фильтром по группе.
+      tags:
+        - Products
+      parameters:
+        - name: group_id
+          in: query
+          description: ID групп продуктов
+          required: false
+          schema:
+            type: string
+      security:
+        - tokenAuth: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Category"
+          description: ""
+  /api/v1/cities/:
+    get:
+      operationId: Список городов
+      description: Получение списка городов.
+      tags:
+        - Stores
+      security:
+        - tokenAuth: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/City"
+          description: ""
+  /api/v1/divisions/:
+    get:
+      operationId: Список подразделений
+      description: Получение списка подразделений.
+      tags:
+        - Stores
+      security:
+        - tokenAuth: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Division"
+          description: ""
+  /api/v1/forecasts/:
+    get:
+      operationId: Список прогнозов
+      description: Получение списка прогнозов.
+      tags:
+        - Forecasts
+      parameters:
+        - name: store
+          in: query
+          description: "список ID супермаркетов"
+          required: true
+          schema:
+            type: string
+        - name: sku
+          in: query
+          description: "список ID продуктов"
+          required: true
+          schema:
+            type: string
+        - name: start_date
+          in: query
+          description: "дата в формате yyyy-mm-dd"
+          required: false
+          schema:
+            type: string
+        - name: end_date
+          in: query
+          required: false
+          description: "дата в формате yyyy-mm-dd"
+          schema:
+            type: string
+        - name: export
+          in: query
+          required: false
+          description: "boolean значение true, если нужен экспорт в excel. Убираем параметр, если не нужен экспорт"
+          schema:
+            type: boolean
+      security:
+        - tokenAuth: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Forecast"
+          description: ""
+  /api/v1/formats/:
+    get:
+      operationId: Списов форматов супермаркетов
+      description: Получение списка форматов типа супермаркета.
+      tags:
+        - Stores
+      security:
+        - tokenAuth: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Format"
+          description: ""
+  /api/v1/groups/:
+    get:
+      operationId: Список групп
+      description: Получение списка групп продуктов.
+      tags:
+        - Products
+      security:
+        - tokenAuth: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Group"
+          description: ""
+  /api/v1/import-forecasts/:
+    get:
+      operationId: Импорт данных прогнозов
+      description: |-
+        Endpoint активации импорта данных прогнозов в БД. 
+
+        Запускается сервисом DS.
+      tags:
+        - Forecasts
+      security:
+        - tokenAuth: []
+      responses:
+        "200":
+          description: No response body
+  /api/v1/import-sales/:
+    post:
+      operationId: Импорт данных фактических продаж
+      description: |-
+        Endpoint для загрузки файла импорта в формате .CSV.
+        Файл должен содержать следующие поля:
+          - st_id, pr_sku_id, date, pr_sales_type_id, 
+          - pr_sales_in_units, pr_promo_sales_in_units, 
+          - pr_sales_in_rub, pr_promo_sales_in_rub
+      tags:
+        - Sales
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FactSalesFile"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/FactSalesFile"
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/FactSalesFile"
+        required: true
+      security:
+        - tokenAuth: []
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FactSalesFile"
+          description: ""
+  /api/v1/products/:
+    get:
+      operationId: Список продуктов
+      description: Получение списка продуктов. Фильтр по подкатегории.
+      tags:
+        - Products
+      parameters:
+        - name: subcat_id
+          in: query
+          description: ID подкатегорий продуктов
+          required: false
+          schema:
+            type: string
+      security:
+        - tokenAuth: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/StockKeepingUnit"
+          description: ""
+  /api/v1/profile/:
+    get:
+      operationId: Профиль пользователя
+      description: Функция отображения информации о пользователе.
+      tags:
+        - Authorization
+      security:
+        - tokenAuth: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Profile"
+          description: ""
+  /api/v1/sales/:
+    get:
+      operationId: Список фактических продаж
+      description: Получения списка продаж.
+      tags:
+        - Sales
+      parameters:
+        - name: store
+          in: query
+          description: "список ID супермаркетов"
+          required: true
+          schema:
+            type: string
+        - name: sku
+          in: query
+          description: "список ID продуктов"
+          required: true
+          schema:
+            type: string
+        - name: date_after
+          in: query
+          description: "дата в формате yyyy-mm-dd"
+          required: false
+          schema:
+            type: string
+        - name: date_before
+          in: query
+          required: false
+          description: "дата в формате yyyy-mm-dd"
+          schema:
+            type: string
+      security:
+        - tokenAuth: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Sale"
+          description: ""
+  /api/v1/sales/export/:
+    get:
+      operationId: Экспорт фактических продаж
+      parameters:
+        - name: store
+          in: query
+          description: "список ID супермаркетов"
+          required: true
+          schema:
+            type: string
+        - name: sku
+          in: query
+          description: "список ID продуктов"
+          required: true
+          schema:
+            type: string
+        - name: date_after
+          in: query
+          description: "дата в формате yyyy-mm-dd"
+          required: false
+          schema:
+            type: string
+        - name: date_before
+          in: query
+          required: false
+          description: "дата в формате yyyy-mm-dd"
+          schema:
+            type: string
+      description: Экспорт данных фактических продаж в виде Excel файла.
+      tags:
+        - Sales
+      security:
+        - tokenAuth: []
+      responses:
+        "200":
+          description: output.xlsx
+  /api/v1/stores/:
+    get:
+      operationId: Список супермаркетов
+      description: Класс представления для Супермаркетов.
+      parameters:
+        - name: search
+          required: false
+          in: query
+          description: |-
+            Запрос поиска для фильтрации супермаркетов.
+
+            Поиск идёт по таким полям как:
+            - Название супермаркета, Тип локации
+            - Название города, Тип размера
+            - Название подразделения, Название типа формата
+          schema:
+            type: string
+      tags:
+        - Stores
+      security:
+        - tokenAuth: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Store"
+          description: ""
+  /api/v1/subcategories/:
+    get:
+      operationId: Список подкатегорий
+      description: Получения списка подкатегорий продуктов. Фильтр по категориям продуктов.
+      tags:
+        - Products
+      parameters:
+        - name: category_id
+          in: query
+          description: ID категории продуктов
+          required: false
+          schema:
+            type: string
+      security:
+        - tokenAuth: []
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Subcategory"
+          description: ""
+  /auth/token/login/:
+    post:
+      operationId: Вход
+      description: Получения токена аутентификации.
+      tags:
+        - Authorization
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TokenCreate"
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: "#/components/schemas/TokenCreate"
+          multipart/form-data:
+            schema:
+              $ref: "#/components/schemas/TokenCreate"
+      security:
+        - tokenAuth: []
+        - {}
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Token"
+          description: ""
+  /auth/token/logout/:
+    post:
+      operationId: Выход
+      description: Удаление токена аутентификации.
+      tags:
+        - Authorization
+      security:
+        - tokenAuth: []
+      responses:
+        "200":
+          description: No response body
+components:
+  schemas:
+    Category:
+      type: object
+      description: Сериализатор для модели Category.
+      properties:
+        id:
+          type: string
+          description: Хэшированный ID
+          maxLength: 32
+        group_id:
+          type: string
+          description: ID группы категории товара
+          title: Группа категории товара
+      required:
+        - group_id
+        - id
+    City:
+      type: object
+      description: Сериализатор для модели City.
+      properties:
+        id:
+          type: string
+          description: Хэшированный ID
+          maxLength: 32
+        title:
+          type: string
+          title: Название города
+          maxLength: 150
+      required:
+        - id
+    Division:
+      type: object
+      description: Сериализатор для модели Division.
+      properties:
+        id:
+          type: string
+          description: Хэшированный ID
+          maxLength: 32
+        title:
+          type: string
+          title: Название подразделения
+          maxLength: 150
+      required:
+        - id
+    FactSalesFile:
+      type: object
+      description: Файл импорта продаж.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        file_path:
+          type: string
+          format: uri
+          title: Файл для импорта
+          description: файл в формате .csv
+      required:
+        - file_path
+        - id
+    Forecast:
+      type: object
+      description: Сериализатор для модели Forecast.
+      properties:
+        store:
+          type: string
+          description: Супермаркет
+          title: Супермаркет
+        sku:
+          type: string
+          description: Товар
+          title: Товар
+        forecast_date:
+          type: string
+          format: date
+          title: Дата
+          description: Дата
+        forecast:
+          type: object
+          properties:
+            date:
+              type: integer
+            date1:
+              type: integer
+            date2:
+              type: integer
+          readOnly: true
+      required:
+        - forecast_data
+        - forecast_date
+        - sku
+        - store
+    Format:
+      type: object
+      description: Сериализатор для модели Format.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          title: Формат супермаркета
+          maxLength: 150
+      required:
+        - id
+        - title
+    Group:
+      type: object
+      description: Сериализатор для модели Group.
+      properties:
+        id:
+          type: string
+          description: Хэшированный ID
+          maxLength: 32
+      required:
+        - id
+    Profile:
+      type: object
+      description: Отображение информации о пользователе.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        username:
+          type: string
+          title: Имя пользователя
+          description:
+            Обязательное поле. Не более 150 символов. Только буквы, цифры
+            и символы @/./+/-/_.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        first_name:
+          type: string
+          title: Имя
+          maxLength: 150
+        last_name:
+          type: string
+          title: Фамилия
+          maxLength: 150
+      required:
+        - email
+        - id
+        - username
+    Sale:
+      type: object
+      description: Сериализатор для модели Sale.
+      properties:
+        store_id:
+          type: string
+          description: Хэшированный ID
+          title: Супермаркет
+        sku_id:
+          type: string
+          description: Хэшированный ID
+          title: Товар
+        fact:
+          type: array
+          items:
+            $ref: "#/components/schemas/SaleInfo"
+      required:
+        - fact
+        - sku_id
+        - store_id
+    SaleInfo:
+      type: object
+      description: Сериализатор для модели SaleInfo.
+      properties:
+        date:
+          type: string
+          format: date
+          title: Дата продажи
+        sales_type:
+          type: integer
+          readOnly: true
+        sales_units:
+          type: integer
+          title: Число проданных товаров без признака промо
+        sales_units_promo:
+          type: integer
+          title: Число проданных товаров с признаком промо
+        sales_rub:
+          type: integer
+
+          title: Продажи без признака промо в рублях
+        sales_rub_promo:
+          type: integer
+          title: Продажи с признаком промо в рублях
+      required:
+        - date
+        - sales_rub
+        - sales_rub_promo
+        - sales_type
+        - sales_units
+        - sales_units_promo
+    StockKeepingUnit:
+      type: object
+      description: Сериализатор для модели StockKeepingUnit.
+      properties:
+        id:
+          type: string
+          description: Хэшированный ID
+          maxLength: 32
+        title:
+          type: string
+          nullable: true
+          title: Наименование
+          description: Наименование
+          maxLength: 150
+        group_id:
+          type: string
+          description: ID группы товара
+          title: Группа товара
+        cat_id:
+          type: string
+          description: ID категории товара
+          title: Категория товара
+        subcat_id:
+          type: string
+          description: ID подкатегории товара
+          title: Подкатегория товара
+        uom_id:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+          description: ID маркера товара (вес/шт)
+          title: Вес/шт
+      required:
+        - cat_id
+        - group_id
+        - id
+        - subcat_id
+        - uom_id
+    Store:
+      type: object
+      description: Сериализатор для модели Store.
+      properties:
+        id:
+          type: string
+          description: Хэшированный ID
+          maxLength: 32
+        title:
+          type: string
+          title: Название супермаркета
+          maxLength: 150
+        is_active:
+          type: boolean
+          title: Флаг активного магазина
+        city:
+          type: string
+          description: Хэшированный ID
+          title: Город
+        division:
+          type: string
+          description: Хэшированный ID
+          title: Подразделение
+        type_format:
+          type: integer
+          title: Формат магазина
+        loc:
+          type: integer
+          title: Местоположение
+        size:
+          type: integer
+          title: Размер
+      required:
+        - city
+        - division
+        - id
+        - loc
+        - size
+        - type_format
+    Subcategory:
+      type: object
+      description: Сериализатор для модели Subcategory.
+      properties:
+        id:
+          type: string
+          description: Хэшированный ID
+          maxLength: 32
+        category_id:
+          type: string
+          description: ID категории товара
+          title: Категория товара
+      required:
+        - category_id
+        - id
+    Token:
+      type: object
+      properties:
+        auth_token:
+          type: string
+
+    TokenCreate:
+      type: object
+      properties:
+        email:
+          type: string
+          description: Эл. почта пользователя
+        password:
+          type: string
+          description: Пароль пользователя
+  securitySchemes:
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Авторизация
+      description: Аутентификация основанная на Токене с префиксом "Token".
