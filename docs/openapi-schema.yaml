@@ -99,13 +99,13 @@ paths:
           required: true
           schema:
             type: string
-        - name: date_after
+        - name: start_date
           in: query
           description: "дата в формате yyyy-mm-dd"
           required: false
           schema:
             type: string
-        - name: date_before
+        - name: end_date
           in: query
           required: false
           description: "дата в формате yyyy-mm-dd"
