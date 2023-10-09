@@ -4,22 +4,22 @@ info:
   version: 1.0.0
   description: |-
     Совместный проект выпускников ЯП для сети гипермаркетов "Лента".
-    
+
     Целью данного проекта было создание сервиса, способного прогнозировать спрос на товары собственного производства, что позволило бы сети гипермаркетов оптимизировать свои запасы и улучшить предложение товаров для потребителей.
-    
+
     Для достижения этой цели команда проекта провела глубокий анализ данных, используя различные методы машинного обучения, а также разработала алгоритмы и модели, которые позволили бы с высокой точностью предсказывать спрос на товары.
 
 tags:
-- name: "Authorization"
-  description: "Авторизация"
-- name: "Stores"
-  description: "Супермаркеты"
-- name: "Products"
-  description: "Товары"
-- name: "Forecasts"
-  description: "Прогнозы продаж"
-- name: "Sales"
-  description: "Продажи"
+  - name: "Authorization"
+    description: "Авторизация"
+  - name: "Stores"
+    description: "Супермаркеты"
+  - name: "Products"
+    description: "Товары"
+  - name: "Forecasts"
+    description: "Прогнозы продаж"
+  - name: "Sales"
+    description: "Продажи"
 
 paths:
   /api/v1/categories/:
@@ -27,7 +27,7 @@ paths:
       operationId: Список категорий
       description: Получение списка категорий продуктов с фильтром по группе.
       tags:
-      - Products
+        - Products
       parameters:
         - name: group_id
           in: query
@@ -36,163 +36,145 @@ paths:
           schema:
             type: string
       security:
-      - tokenAuth: []
+        - tokenAuth: []
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Category'
-          description: ''
+                  $ref: "#/components/schemas/Category"
+          description: ""
   /api/v1/cities/:
     get:
       operationId: Список городов
       description: Получение списка городов.
       tags:
-      - Stores
+        - Stores
       security:
-      - tokenAuth: []
+        - tokenAuth: []
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/City'
-          description: ''
+                  $ref: "#/components/schemas/City"
+          description: ""
   /api/v1/divisions/:
     get:
       operationId: Список подразделений
       description: Получение списка подразделений.
       tags:
-      - Stores
+        - Stores
       security:
-      - tokenAuth: []
+        - tokenAuth: []
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Division'
-          description: ''
+                  $ref: "#/components/schemas/Division"
+          description: ""
   /api/v1/forecasts/:
     get:
       operationId: Список прогнозов
       description: Получение списка прогнозов.
       tags:
-      - Forecasts
+        - Forecasts
       parameters:
         - name: store
           in: query
-          description: 'список ID супермаркетов'
+          description: "список ID супермаркетов"
           required: true
           schema:
             type: string
         - name: sku
           in: query
-          description: 'список ID продуктов'
+          description: "список ID продуктов"
           required: true
           schema:
             type: string
-        - name: date_after
+        - name: start_date
           in: query
-          description: 'дата в формате yyyy-mm-dd'
+          description: "дата в формате yyyy-mm-dd"
           required: false
           schema:
             type: string
-        - name: date_before
+        - name: end_date
           in: query
           required: false
-          description: 'дата в формате yyyy-mm-dd'
+          description: "дата в формате yyyy-mm-dd"
           schema:
             type: string
+        - name: export
+          in: query
+          required: false
+          description: "boolean значение true, если нужен экспорт в excel. Убираем параметр, если не нужен экспорт"
+          schema:
+            type: boolean
       security:
-      - tokenAuth: []
+        - tokenAuth: []
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Forecast'
-          description: ''
-  /api/v1/forecasts/export/:
-    get:
-      operationId: Экспорт прогнозов
-      description: Экспорт данных по прогнозам в excel файл.
-      tags:
-      - Forecasts
-      parameters:
-        - name: date_after
-          in: query
-          description: 'дата в формате yyyy-mm-dd'
-          required: false
-          schema:
-            type: string
-        - name: date_before
-          in: query
-          required: false
-          description: 'дата в формате yyyy-mm-dd'
-          schema:
-            type: string
-      security:
-      - tokenAuth: []
-      responses:
-        '200':
-          description: output.xlsx
+                  $ref: "#/components/schemas/Forecast"
+          description: ""
   /api/v1/formats/:
     get:
       operationId: Списов форматов супермаркетов
       description: Получение списка форматов типа супермаркета.
       tags:
-      - Stores
+        - Stores
       security:
-      - tokenAuth: []
+        - tokenAuth: []
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Format'
-          description: ''
+                  $ref: "#/components/schemas/Format"
+          description: ""
   /api/v1/groups/:
     get:
       operationId: Список групп
       description: Получение списка групп продуктов.
       tags:
-      - Products
+        - Products
       security:
-      - tokenAuth: []
+        - tokenAuth: []
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Group'
-          description: ''
+                  $ref: "#/components/schemas/Group"
+          description: ""
   /api/v1/import-forecasts/:
     get:
       operationId: Импорт данных прогнозов
       description: |-
         Endpoint активации импорта данных прогнозов в БД. 
-        
+
         Запускается сервисом DS.
       tags:
-      - Forecasts
+        - Forecasts
       security:
-      - tokenAuth: []
+        - tokenAuth: []
       responses:
-        '200':
+        "200":
           description: No response body
   /api/v1/import-sales/:
     post:
@@ -204,34 +186,34 @@ paths:
           - pr_sales_in_units, pr_promo_sales_in_units, 
           - pr_sales_in_rub, pr_promo_sales_in_rub
       tags:
-      - Sales
+        - Sales
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/FactSalesFile'
+              $ref: "#/components/schemas/FactSalesFile"
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/FactSalesFile'
+              $ref: "#/components/schemas/FactSalesFile"
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/FactSalesFile'
+              $ref: "#/components/schemas/FactSalesFile"
         required: true
       security:
-      - tokenAuth: []
+        - tokenAuth: []
       responses:
-        '201':
+        "201":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FactSalesFile'
-          description: ''
+                $ref: "#/components/schemas/FactSalesFile"
+          description: ""
   /api/v1/products/:
     get:
       operationId: Список продуктов
       description: Получение списка продуктов. Фильтр по подкатегории.
       tags:
-      - Products
+        - Products
       parameters:
         - name: subcategory_id
           in: query
@@ -240,73 +222,73 @@ paths:
           schema:
             type: string
       security:
-      - tokenAuth: []
+        - tokenAuth: []
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/StockKeepingUnit'
-          description: ''
+                  $ref: "#/components/schemas/StockKeepingUnit"
+          description: ""
   /api/v1/profile/:
     get:
       operationId: Профиль пользователя
       description: Функция отображения информации о пользователе.
       tags:
-      - Authorization
+        - Authorization
       security:
-      - tokenAuth: []
+        - tokenAuth: []
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Profile'
-          description: ''
+                $ref: "#/components/schemas/Profile"
+          description: ""
   /api/v1/sales/:
     get:
       operationId: Список фактических продаж
       description: Получения списка продаж.
       tags:
-      - Sales
+        - Sales
       parameters:
         - name: store
           in: query
-          description: 'список ID супермаркетов'
+          description: "список ID супермаркетов"
           required: true
           schema:
             type: string
         - name: sku
           in: query
-          description: 'список ID продуктов'
+          description: "список ID продуктов"
           required: true
           schema:
             type: string
         - name: date_after
           in: query
-          description: 'дата в формате yyyy-mm-dd'
+          description: "дата в формате yyyy-mm-dd"
           required: false
           schema:
             type: string
         - name: date_before
           in: query
           required: false
-          description: 'дата в формате yyyy-mm-dd'
+          description: "дата в формате yyyy-mm-dd"
           schema:
             type: string
       security:
-      - tokenAuth: []
+        - tokenAuth: []
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Sale'
-          description: ''
+                  $ref: "#/components/schemas/Sale"
+          description: ""
   /api/v1/sales/export/:
     get:
       operationId: Экспорт фактических продаж
@@ -314,46 +296,46 @@ paths:
       tags:
         - Sales
       security:
-        - tokenAuth: [ ]
+        - tokenAuth: []
       responses:
-        '200':
+        "200":
           description: output.xlsx
   /api/v1/stores/:
     get:
       operationId: Список супермаркетов
       description: Класс представления для Супермаркетов.
       parameters:
-      - name: search
-        required: false
-        in: query
-        description: |- 
-          Запрос поиска для фильтрации супермаркетов.
-          
-          Поиск идёт по таким полям как:
-          - Название супермаркета, Тип локации
-          - Название города, Тип размера
-          - Название подразделения, Название типа формата
-        schema:
-          type: string
+        - name: search
+          required: false
+          in: query
+          description: |-
+            Запрос поиска для фильтрации супермаркетов.
+
+            Поиск идёт по таким полям как:
+            - Название супермаркета, Тип локации
+            - Название города, Тип размера
+            - Название подразделения, Название типа формата
+          schema:
+            type: string
       tags:
-      - Stores
+        - Stores
       security:
-      - tokenAuth: []
+        - tokenAuth: []
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Store'
-          description: ''
+                  $ref: "#/components/schemas/Store"
+          description: ""
   /api/v1/subcategories/:
     get:
       operationId: Список подкатегорий
       description: Получения списка подкатегорий продуктов. Фильтр по категориям продуктов.
       tags:
-      - Products
+        - Products
       parameters:
         - name: category_id
           in: query
@@ -362,53 +344,53 @@ paths:
           schema:
             type: string
       security:
-      - tokenAuth: []
+        - tokenAuth: []
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Subcategory'
-          description: ''
+                  $ref: "#/components/schemas/Subcategory"
+          description: ""
   /auth/token/login/:
     post:
       operationId: Вход
       description: Получения токена аутентификации.
       tags:
-      - Authorization
+        - Authorization
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TokenCreate'
+              $ref: "#/components/schemas/TokenCreate"
           application/x-www-form-urlencoded:
             schema:
-              $ref: '#/components/schemas/TokenCreate'
+              $ref: "#/components/schemas/TokenCreate"
           multipart/form-data:
             schema:
-              $ref: '#/components/schemas/TokenCreate'
+              $ref: "#/components/schemas/TokenCreate"
       security:
-      - tokenAuth: []
-      - {}
+        - tokenAuth: []
+        - {}
       responses:
-        '200':
+        "200":
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Token'
-          description: ''
+                $ref: "#/components/schemas/Token"
+          description: ""
   /auth/token/logout/:
     post:
       operationId: Выход
       description: Удаление токена аутентификации.
       tags:
-      - Authorization
+        - Authorization
       security:
-      - tokenAuth: []
+        - tokenAuth: []
       responses:
-        '200':
+        "200":
           description: No response body
 components:
   schemas:
@@ -425,8 +407,8 @@ components:
           description: ID группы категории товара
           title: Группа категории товара
       required:
-      - group_id
-      - id
+        - group_id
+        - id
     City:
       type: object
       description: Сериализатор для модели City.
@@ -440,7 +422,7 @@ components:
           title: Название города
           maxLength: 150
       required:
-      - id
+        - id
     Division:
       type: object
       description: Сериализатор для модели Division.
@@ -454,7 +436,7 @@ components:
           title: Название подразделения
           maxLength: 150
       required:
-      - id
+        - id
     FactSalesFile:
       type: object
       description: Файл импорта продаж.
@@ -468,8 +450,8 @@ components:
           title: Файл для импорта
           description: файл в формате .csv
       required:
-      - file_path
-      - id
+        - file_path
+        - id
     Forecast:
       type: object
       description: Сериализатор для модели Forecast.
@@ -498,10 +480,10 @@ components:
               type: integer
           readOnly: true
       required:
-      - forecast_data
-      - forecast_date
-      - sku
-      - store
+        - forecast_data
+        - forecast_date
+        - sku
+        - store
     Format:
       type: object
       description: Сериализатор для модели Format.
@@ -514,8 +496,8 @@ components:
           title: Формат супермаркета
           maxLength: 150
       required:
-      - id
-      - title
+        - id
+        - title
     Group:
       type: object
       description: Сериализатор для модели Group.
@@ -525,7 +507,7 @@ components:
           description: Хэшированный ID
           maxLength: 32
       required:
-      - id
+        - id
     Profile:
       type: object
       description: Отображение информации о пользователе.
@@ -536,7 +518,8 @@ components:
         username:
           type: string
           title: Имя пользователя
-          description: Обязательное поле. Не более 150 символов. Только буквы, цифры
+          description:
+            Обязательное поле. Не более 150 символов. Только буквы, цифры
             и символы @/./+/-/_.
           pattern: ^[\w.@+-]+$
           maxLength: 150
@@ -571,11 +554,11 @@ components:
         fact:
           type: array
           items:
-            $ref: '#/components/schemas/SaleInfo'
+            $ref: "#/components/schemas/SaleInfo"
       required:
-      - fact
-      - sku_id
-      - store_id
+        - fact
+        - sku_id
+        - store_id
     SaleInfo:
       type: object
       description: Сериализатор для модели SaleInfo.
@@ -601,12 +584,12 @@ components:
           type: integer
           title: Продажи с признаком промо в рублях
       required:
-      - date
-      - sales_rub
-      - sales_rub_promo
-      - sales_type
-      - sales_units
-      - sales_units_promo
+        - date
+        - sales_rub
+        - sales_rub_promo
+        - sales_type
+        - sales_units
+        - sales_units_promo
     StockKeepingUnit:
       type: object
       description: Сериализатор для модели StockKeepingUnit.
@@ -640,11 +623,11 @@ components:
           description: ID маркера товара (вес/шт)
           title: Вес/шт
       required:
-      - cat_id
-      - group_id
-      - id
-      - subcat_id
-      - uom_id
+        - cat_id
+        - group_id
+        - id
+        - subcat_id
+        - uom_id
     Store:
       type: object
       description: Сериализатор для модели Store.
@@ -678,12 +661,12 @@ components:
           type: integer
           title: Размер
       required:
-      - city
-      - division
-      - id
-      - loc
-      - size
-      - type_format
+        - city
+        - division
+        - id
+        - loc
+        - size
+        - type_format
     Subcategory:
       type: object
       description: Сериализатор для модели Subcategory.
@@ -697,8 +680,8 @@ components:
           description: ID категории товара
           title: Категория товара
       required:
-      - category_id
-      - id
+        - category_id
+        - id
     Token:
       type: object
       properties:
