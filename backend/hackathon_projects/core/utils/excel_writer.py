@@ -97,7 +97,6 @@ class ExelExport:
         """Создаёт HttpResponse с файлом excel."""
 
         df = pd.DataFrame(data)
-        print(df)
         with pd.ExcelWriter(self.output, engine="xlsxwriter") as writer:
             df.to_excel(writer, sheet_name="Sheet1", index=False)
         response = HttpResponse(
