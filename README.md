@@ -120,9 +120,22 @@ docker-compose down
 # создать суперпользователя
 docker-compose exec back python manage.py createsuperuser
 ```
-Документация к API доступна [🔗Здесь (локально)](http://127.0.0.1/docs/)
+Документация к API доступна [🔗Здесь](http://127.0.0.1/docs/)
+
+Авто-документация (drf-spectacular) [🔗Здесь](http://127.0.0.1/docs-auto/)
 
 ## Архитектура бэкенда
+<details>
+<summary>Стек технологий</summary>
+
+- Postgres
+- Django, Django REST Framework, Djoser, Drf-spectacular
+- Django UnitTest, Factory-boy
+- Celery, Flower, Gunicorn, Loguru, Pandas, Redis
+- Requests, XlsxWriter
+
+</details>
+
 <details>
 <summary>Схема БД на этапе планирования</summary>
 
