@@ -1,0 +1,21 @@
+.loader {
+  width: 1500px;
+  height: 700px;
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+  justify-content: center;
+  align-items: center;
+
+  &__header {
+    margin: 0;
+    padding: 0 0 100px 0;
+    font-size: 42px;
+    font-weight: 700;
+    color: #001E64;
+  }
+
+  &__logo {
+    height: 220px;
+  }
+}

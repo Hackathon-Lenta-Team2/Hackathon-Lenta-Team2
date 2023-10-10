@@ -1,0 +1,127 @@
+.tableContainer {
+  position: relative;
+  margin-top: 60px;
+}
+
+.tableWrapper {
+  height: 570px;
+  overflow-y: scroll;
+}
+
+.controls {
+  position: absolute;
+  top: -114px;
+  right: 0;
+  display: flex;
+  gap: 24px;
+}
+
+.pagination {
+  display: flex;
+  gap: 20px;
+
+  &__backBtn {
+    width: 54px;
+    height: 54px;
+    padding: 0;
+    background-image: url('../../images/pagination-back-btn.svg');
+    background-position: center;
+    background-repeat: no-repeat;
+    border: 2px solid var(--blue);
+    background-color: var(--white-font);
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  &__fwdBtn {
+    width: 54px;
+    height: 54px;
+    padding: 0;
+    background-image: url('../../images/pagination-fwd-btn.svg');
+    background-position: center;
+    background-repeat: no-repeat;
+    border: 2px solid var(--blue);
+    background-color: var(--white-font);
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  &__fwdBtnDisabled {
+    background-color: var(--grey-disabled-btn);
+    border-color: var(--grey-disabled-btn);
+    background-image: url('../../images/pagination-fwd-btn-disabled.svg');
+  }
+
+  &__bkBtnDisabled {
+    background-color: var(--grey-disabled-btn);
+    border-color: var(--grey-disabled-btn);
+    background-image: url('../../images/pagination-bk-btn-disabled.svg');
+  }
+}
+
+.table {
+  border-collapse: collapse;
+  margin: 0 auto;
+  width: 1824px;
+
+  &__headerRow {
+    height: 74px;
+    background-color: var(--blue);
+    color: var(--white-font);
+    font: var(--font-h3-24-110-450);
+    text-align: left;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+
+    th {
+      width: 142px;
+      padding-left: 20px;
+    }
+
+    th:nth-child(1) {
+      width: 308px;
+    }
+
+    th:nth-child(2) {
+      width: 500px;
+      margin-right: auto;
+    }
+  }
+
+  &__headerCell {
+    padding: 0;
+    border: none;
+  }
+
+  &__body {
+    tr:nth-child(even) {
+      background-color: var(--blue-table);
+    }
+
+    tr:nth-child(even):hover {
+      background-color: var(--light-blue);
+      cursor: pointer;
+    }
+  }
+
+  &__bodyRow {
+    height: 62px;
+    font: var(--font-t1-20-110-450);
+
+    &:hover {
+      background-color: var(--light-blue);
+      cursor: pointer;
+    }
+  }
+
+  &__bodyCell {
+    padding: 0 0 0 20px;
+    border: none;
+    text-align: left;
+  }
+}

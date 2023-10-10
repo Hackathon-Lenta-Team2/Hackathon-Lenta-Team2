@@ -1,0 +1,17 @@
+@font-face {
+  src: url(./fonts/FuturaPTLight.otf) format('opentype');
+  font-family: 'Futura';
+  font-weight: 400;
+}
+
+@font-face {
+  src: url(./fonts/FuturaPTBook.otf) format('opentype');
+  font-family: 'Futura';
+  font-weight: 450;
+}
+
+@font-face {
+  src: url(./fonts/FuturaPTBold.otf) format('opentype');
+  font-family: 'Futura';
+  font-weight: 700;
+}

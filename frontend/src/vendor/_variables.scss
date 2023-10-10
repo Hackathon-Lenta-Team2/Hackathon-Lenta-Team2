@@ -1,0 +1,26 @@
+:root {
+  /* Typography */
+  --font-sans: 'Futura', sans-serif;
+
+  /* Font Weights */
+  --font-weight-400: 400;
+  --font-weight-450: 450;
+  --font-weight-700: 700;
+
+  /* Fonts */
+  --font-h1-42-90-700: var(--font-weight-700) 42px/0.9 var(--font-sans);
+  --font-h2-32-100-450: var(--font-weight-450) 32px/1 var(--font-sans);
+  --font-h3-24-110-450: var(--font-weight-450) 24px/1 var(--font-sans);
+  --font-t1-20-110-450: var(--font-weight-450) 20px/1.1 var(--font-sans);
+  --font-t2-14-120-400: var(--font-weight-400) 14px/1.2 var(--font-sans);
+
+  /* Colors */
+  --white-font: #fff;
+  --blue: #003c96;
+  --light-blue: #2fcbff;
+  --blue-table: #f0fbff;
+  --grey-disabled-btn: #d3d3d3;
+  --grey-disable-tab: #4d4d4d;
+  --yellow: #ffb900;
+  --green: #00be64;
+}

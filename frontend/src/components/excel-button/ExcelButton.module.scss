@@ -1,0 +1,13 @@
+.btn {
+  background-color: var(--blue);
+  font: var(--font-t1-20-110-450);
+  color: var(--white-font);
+  width: 284px;
+  height: 54px;
+  padding: 0;
+  border: none;
+
+  &:hover {
+    cursor: pointer;
+  }
+}

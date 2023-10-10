@@ -1,0 +1,30 @@
+$textcolor: #4D4D4D;
+
+.error-section {
+  width: 1516px;
+  margin: auto;
+  padding-top: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  &__text-container {
+    max-width: 900px;
+    text-align: left;
+  }
+
+  &__header {
+    font-size: 42px;
+    font-weight: 700;
+    color: $textcolor;
+    margin: 0;
+  }
+
+  &__text {
+    font-size: 32px;
+    font-weight: 450;
+    color: $textcolor;
+    margin: 0;
+    padding: 40px 0 60px 0;
+  }
+}

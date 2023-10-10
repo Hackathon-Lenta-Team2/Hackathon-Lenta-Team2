@@ -1,0 +1,84 @@
+.chartsContainer {
+  max-width: 1824px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin: 53px 0 10px 0;
+  position: relative;
+
+  &__tk {
+    position: absolute;
+    top: 40px;
+    margin: 0;
+    font: var(--font-h3-24-110-450);
+  }
+
+  &__chart {
+    background-color: var(--blue-table);
+    width: 900px;
+    height: 594px;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+  }
+
+  &__chartWrapper {
+    width: 408px;
+    height: 408px;
+  }
+}
+
+.legend {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 280px;
+
+  &__row {
+    display: flex;
+    font: var(--font-t1-20-110-450);
+
+    &:nth-child(1) .legend__colorBox {
+      background-color: var(--yellow);
+    }
+
+    &:nth-child(2) .legend__colorBox {
+      background-color: var(--blue);
+    }
+
+    &:nth-child(3) .legend__colorBox {
+      background-color: var(--light-blue);
+    }
+
+    &:nth-child(4) .legend__colorBox {
+      background-color: var(--green);
+    }
+
+    &:nth-child(5) .legend__colorBox {
+      background-color: var(--grey-disable-tab);
+    }
+  }
+
+  &__colorBox {
+    width: 25px;
+    height: 25px;
+    margin-right: 24px;
+  }
+
+  &__label {
+    margin: 0;
+  }
+
+  &__value {
+    margin: 0;
+    flex: 1;
+  }
+}
+
+.controls {
+  position: absolute;
+  top: -114px;
+  right: 0;
+  display: flex;
+  gap: 24px;
+}

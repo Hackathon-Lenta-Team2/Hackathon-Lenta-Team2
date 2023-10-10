@@ -1,0 +1,35 @@
+.popup {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  box-shadow: 0 0 10px #173C9126;
+  width: 324px;
+  box-sizing: border-box;
+  padding: 20px;
+  margin-right: 40px;
+  position: relative;
+
+  &__text-container {
+    display: flex;
+    margin-bottom: 20px;
+    justify-content: center;
+    position: relative;
+  }
+
+  &__text {
+    align-self: center;
+    font-size: 20px;
+    font-weight: 450;
+    margin: 0;
+  }
+
+  &__close-button {
+    border: 0;
+    padding: 0;
+    background-color: transparent;
+    cursor: pointer;
+    line-height: 0;
+    position: absolute;
+    right: 5px;
+  }
+}

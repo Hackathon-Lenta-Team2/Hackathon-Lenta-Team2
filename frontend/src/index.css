@@ -1,0 +1,7 @@
+@import url('./vendor/normalize.css');
+@import url('./vendor/fonts.css');
+@import url('./vendor/_variables.scss');
+
+#root, #modal-root {
+  font-family: 'Futura', 'Arial', sans-serif;
+}

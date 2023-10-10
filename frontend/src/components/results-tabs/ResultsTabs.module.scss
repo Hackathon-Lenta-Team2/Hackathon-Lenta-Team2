@@ -1,0 +1,25 @@
+.resultsTabs {
+  display: flex;
+  max-width: 300px;
+
+  &__btn {
+    padding: 0;
+    border: none;
+    width: 142px;
+    height: 48px;
+    text-align: center;
+    font: var(--font-h2-32-100-450);
+    background-color: var(--white-font);
+    color: var(--grey-disabled-tab);
+    border-bottom: 2px solid var(--grey-disabled-btn);
+
+    &_active {
+      border-bottom: 2px solid var(--blue);
+      color: var(--blue);
+    }
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}

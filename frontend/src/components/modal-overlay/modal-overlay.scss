@@ -1,0 +1,21 @@
+.overlay {
+  display: flex;
+  box-sizing: border-box;
+  height: 100%;
+  width: 100%;
+  padding: 70px 0 0 0;
+  justify-content: flex-end;
+  align-items: flex-start;
+  position: absolute;
+  left: 0;
+  top: 0;
+  transition: visibility .5s,opacity .5s linear;
+  opacity: 0;
+  visibility: hidden;
+  z-index: 1000;
+
+  &_opened {
+    visibility: visible;
+    opacity: 1;
+  }
+}

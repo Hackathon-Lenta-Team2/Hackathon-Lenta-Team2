@@ -1,0 +1,37 @@
+.filter {
+	padding-top: 60px;
+	max-width: 900px;
+	display: flex;
+	flex-direction: column;
+	text-align: left;
+  margin: auto;
+}
+
+.tab-menu {
+	display: flex;
+	width: 100%;
+	padding-bottom: 60px;
+}
+
+.tab {
+	background-color: white;
+	border-radius: 0;
+	border: 0;
+	width: 50%;
+	font-size: 32px;
+	border-bottom: 2px solid #D3D3D3;
+	color: #4D4D4D;
+  cursor: pointer;
+  font-weight: 450;
+
+	&:hover {
+		color: rgba(0, 30, 100, 0.5);
+		border-bottom: 2px solid rgba(0, 30, 100, 0.2);
+	}
+
+	&_active {
+		color: #003C96;
+		border-bottom: 2px solid #003C96;
+	}
+}
+

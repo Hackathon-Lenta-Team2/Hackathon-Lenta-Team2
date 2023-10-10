@@ -1,0 +1,31 @@
+.controls {
+  position: absolute;
+  top: -114px;
+  right: 0;
+  display: flex;
+  gap: 24px;
+}
+
+.chartContainer {
+  max-width: 1824px;
+  display: flex;
+  flex-direction: column;
+  margin: 60px 0 15px 0;
+  position: relative;
+
+  &__title {
+    background-color: var(--blue);
+    height: 76px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font: var(--font-h3-24-110-450);
+    color: var(--white-font);
+  }
+
+  &__chart {
+    background-color: var(--blue-table);
+    padding: 5px 40px 40px 0;
+    max-height: 580px;
+  }
+}

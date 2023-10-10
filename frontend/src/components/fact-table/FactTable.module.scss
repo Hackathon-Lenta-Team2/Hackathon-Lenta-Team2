@@ -1,0 +1,80 @@
+.tableContainer {
+  position: relative;
+  margin-top: 60px;
+}
+.tableWrapper {
+  height: 570px;
+  overflow-y: scroll;
+}
+
+.controls {
+  position: absolute;
+  top: -114px;
+  right: 0;
+  display: flex;
+  gap: 24px;
+}
+
+.table {
+  border-collapse: collapse;
+  margin: 0 auto;
+  width: 1824px;
+  overflow-y: auto;
+
+  &__headerRow {
+    height: 74px;
+    background-color: var(--blue);
+    color: var(--white-font);
+    font: var(--font-h3-24-110-450);
+    text-align: left;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+
+    th {
+      width: 260px;
+      padding-left: 20px;
+    }
+
+    th:nth-child(1) {
+      width: 380px;
+    }
+
+    th:nth-child(2) {
+      width: 450px;
+      margin-right: auto;
+    }
+  }
+
+  &__headerCell {
+    padding: 0;
+    border: none;
+  }
+
+  &__body {
+    tr:nth-child(even) {
+      background-color: var(--blue-table);
+    }
+
+    tr:nth-child(even):hover {
+      background-color: var(--light-blue);
+      cursor: pointer;
+    }
+  }
+
+  &__bodyRow {
+    height: 62px;
+    font: var(--font-t1-20-110-450);
+
+    &:hover {
+      background-color: var(--light-blue);
+      cursor: pointer;
+    }
+  }
+
+  &__bodyCell {
+    padding: 0 0 0 20px;
+    border: none;
+    text-align: left;
+  }
+}

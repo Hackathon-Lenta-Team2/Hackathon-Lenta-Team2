@@ -1,0 +1,47 @@
+.overlayContainer {
+  padding: 36px 20px 24px 20px;
+  position: fixed;
+  width: 324px;
+  background-color: var(--white-font);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  top: 0;
+  left: 0;
+  transform: translate(-50%, -50%);
+  box-shadow: 0px 1px 10px 0px rgba(23, 60, 145, 0.15);
+  font: var(--font-t2-14-120-400)
+}
+
+.overlayContent {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  &__text {
+    text-align: left;
+    margin: 0;
+  }
+
+  &__subtitle {
+    text-align: left;
+    margin: 0;
+    color: var(--blue);
+    margin-bottom: 2px;
+  }
+
+  &__btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 24px;
+    height: 24px;
+    background-image: url('../../images/close-row-overlay-btn.svg');
+    background-position: center;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    padding: 0;
+    border: none;
+    background-color: var(--white-font);
+  }
+}
