@@ -78,6 +78,8 @@ cd Hackathon-Lenta-Team2/ds/scripts/src/
 # в директории infra\
 # убедитесь, что Docker установлен и запущен на вашем ПК
 .\run.sh
+# дождитесь уведомления "Service started successfully."
+# в терминале
 ```
 #### Для восстановления БД:
 ``` bash
@@ -91,6 +93,8 @@ cd Hackathon-Lenta-Team2/ds/scripts/src/
 # в директории infra/
 # убедитесь, что Docker установлен и запущен на вашем ПК
 sh run.sh
+# дождитесь уведомления "Service started successfully."
+# в терминале
 ```
 #### Для восстановления БД:
 ``` bash
