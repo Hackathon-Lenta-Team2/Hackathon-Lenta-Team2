@@ -8,6 +8,7 @@
 В данном репозитории находится общая сборка работ команд Backend и DS.
 
 ### Ссылки на репозитории отдельных направлений:
+- [🔗Frontend](https://github.com/Hackathon-Lenta-Team2/frontend)
 - [🔗Design](https://www.figma.com/file/2Mxz9r4EpsNjL8mJFgRQgM/%D0%9B%D0%B5%D0%BD%D1%82%D0%B0.-%D0%94%D0%B8%D0%B7%D0%B0%D0%B9%D0%BD?type=design&node-id=52%3A432&mode=design&t=t3UMucqylrbL4jSm-1)
 - [🔗Data Science](https://github.com/Hackathon-Lenta-Team2/ds)
 
